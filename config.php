@@ -1,5 +1,6 @@
 <?php
-    require_once('./helper.php');    
+    // require_once('./helper.php');    
+    require_once('assets/includes/helper.php');    
     // MySQL Hostname
     $sql_db_host = env("DB_HOST") ?? 'mysql';
     // MySQL Database User

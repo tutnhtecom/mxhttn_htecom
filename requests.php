@@ -1,5 +1,6 @@
 <?php
 require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 decryptConfigData();
 $f = '';
 $s = '';
@@ -21,85 +22,11 @@ if (!empty($_POST['hash_id'])) {
     $hash_id = $_POST['hash'];
 }
 $data = array();
-$allow_array = array(
-    'upgrade',
-    'paystack',
-    'cashfree',
-    'payment',
-    'pay_with_bitcoin',
-    'coinpayments_callback',
-    'paypro_with_bitcoin',
-    'upload-blog-image',
-    'wallet',
-    'download_user_info',
-    'movies',
-    'funding',
-    'stripe',
-    'coinbase',
-    'load_more_products',
-    'yoomoney',
-    'iyzipay',
-    'fluttewave',
-    'fortumo',
-    'aamarpay',
-    'pay_with_bitcoin',
-);
+$allow_array = $request_allow_array;
 if ($f == 'certification' && $s == 'download_user_certification' && !empty($_GET['id']) && is_numeric($_GET['id']) && $_GET['id'] > 0) {
     $allow_array[] = 'certification';
 }
-$non_login_array = array(
-    'session_status',
-    'open_lightbox',
-    'get_welcome_users',
-    'load_posts',
-    'save_user_location',
-    'load-more-groups',
-    'load-more-pages',
-    'load-more-users',
-    'load_profile_posts',
-    'confirm_user_unusal_login',
-    'confirm_user',
-    'confirm_sms_user',
-    'resned_code',
-    'resned_code_ac',
-    'resned_ac_email',
-    'contact_us',
-    'google_login',
-    'login',
-    'register',
-    'recover',
-    'recoversms',
-    'reset_password',
-    'search',
-    'get_search_filter',
-    'update_announcement_views',
-    'get_more_hashtag_posts',
-    'open_album_lightbox',
-    'get_next_album_image',
-    'get_previous_album_image',
-    'get_next_product_image',
-    'get_previous_product_image',
-    'open_multilightbox',
-    'get_next_image',
-    'get_previous_image',
-    'get_next_video',
-    'get_previous_video',
-    'load-blogs',
-    'load-recent-blogs',
-    'get_no_posts_name',
-    'search-blog-read',
-    'search-blog',
-    'coinbase',
-    'load_more_products',
-    'yoomoney',
-    'iyzipay',
-    'fluttewave',
-    'fortumo',
-    'aamarpay',
-    'pay_with_bitcoin',
-    'resend_two_factor',
-    'cashfree',
-);
+$non_login_array = $request_non_login_array;
 if ($wo['config']['membership_system'] == 1) {
     $non_login_array[] = 'pro_register';
     $non_login_array[] = 'get_payment_method';

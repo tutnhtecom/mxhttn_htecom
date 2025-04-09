@@ -1,5 +1,7 @@
 <?php
 // API v2 is not yet finished, you have to use the old API version.
+require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 header_remove('Server');
 header("Content-type: application/json");
 require('assets/init.php');
@@ -13,7 +15,7 @@ $type           = (!empty($_GET['type'])) ? Wo_Secure($_GET['type'], 0) : false;
 $server_key     = (!empty($_POST['server_key'])) ? Wo_Secure($_POST['server_key'], 0) : false;
 if (empty($type)) {
     $response_data = array(
-        'api_status' => '404',
+        'api_status' => $api_status_errors_404,
         'errors' => array(
             'error_id' => '1',
             'error_text' => 'Error: 404 API Type not specified'
@@ -24,7 +26,7 @@ if (empty($type)) {
 }
 if (empty($server_key)) {
     $response_data = array(
-        'api_status' => '404',
+        'api_status' => $api_status_errors_404,
         'errors' => array(
             'error_id' => '1',
             'error_text' => 'Error: 404 POST (server_key) not specified, Admin Panel > API Settings > Manage API Server Key'
@@ -35,7 +37,7 @@ if (empty($server_key)) {
 }
 if ($server_key != $wo['config']['widnows_app_api_key']) {
     $response_data = array(
-        'api_status' => '404',
+        'api_status' => $api_status_errors_404,
         'errors' => array(
             'error_id' => '1',
             'error_text' => 'Error: invalid server key'
@@ -73,7 +75,7 @@ $pages_without_loggedin     = array(
 );
 if (!file_exists($api)) {
     $response_data = array(
-        'api_status' => '404',
+        'api_status' => $api_status_errors_404,
         'errors' => array(
             'error_id' => '1',
             'error_text' => 'Error: 404 API Type Not Found'
@@ -111,7 +113,7 @@ if (!in_array($type, $pages_without_loggedin)) {
 }
 if (!empty($error_code)) {
     $response_data = array(
-        'api_status' => '404',
+        'api_status' => $api_status_errors_404,
         'errors' => array(
             'error_id' => $error_code,
             'error_text' => $error_message

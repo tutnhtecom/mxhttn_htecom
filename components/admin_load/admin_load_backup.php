@@ -1,12 +1,42 @@
 <?php
 require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 cleanConfigData();
 $is_admin     = Wo_IsAdmin();
 $is_moderoter = Wo_IsModerator();
-
-include('components/admin_load/admin_load_header.php');
-include('components/admin_load/admin_load_request.php');
-
+if ($wo['config']['maintenance_mode'] == 1) {
+    if ($wo['loggedin'] == false) {
+        header("Location: " . Wo_SeoLink('index.php?link1=welcome') . $wo['marker'] . 'm=true');
+        exit();
+    } else {
+        if ($is_admin === false) {
+            header("Location: " . Wo_SeoLink('index.php?link1=welcome') . $wo['marker'] . 'm=true');
+            exit();
+        }
+    }
+}
+if ($is_admin == false && $is_moderoter == false) {
+    header("Location: " . Wo_SeoLink('index.php?link1=welcome'));
+    exit();
+}
+if (!empty($_GET)) {
+    foreach ($_GET as $key => $value) {
+        $value      = preg_replace('/on[^<>=]+=[^<>]*/m', '', $value);
+        $_GET[$key] = strip_tags($value);
+    }
+}
+if (!empty($_REQUEST)) {
+    foreach ($_REQUEST as $key => $value) {
+        $value          = preg_replace('/on[^<>=]+=[^<>]*/m', '', $value);
+        $_REQUEST[$key] = strip_tags($value);
+    }
+}
+if (!empty($_POST)) {
+    foreach ($_POST as $key => $value) {
+        $value       = preg_replace('/on[^<>=]+=[^<>]*/m', '', $value);
+        $_POST[$key] = strip_tags($value);
+    }
+}
 $path  = (!empty($_GET['path'])) ? getPageFromPath($_GET['path']) : null;
 $files = scandir('admin-panel/pages');
 unset($files[0]);

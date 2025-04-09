@@ -1,144 +1,28 @@
 <?php
 cleanConfigData();
+require_once('assets/includes/helper.php');
+require_once('assets/includes/data_general.php');
 $page  = 'dashboard';
 $wo['all_pages'] = scandir('admin-panel/pages');
 unset($wo['all_pages'] [0]);
 unset($wo['all_pages'] [1]);
 unset($wo['all_pages'] [2]);
-$pages = array(
-    'general-settings',
-    'dashboard',
-    'site-settings',
-    'dashboard',
-    'site-features',
-    'amazon-settings',
-    'email-settings',
-    'social-login',
-    'video-settings',
-    'manage-languages',
-    'add-language',
-    'edit-lang',
-    'manage-users',
-    'manage-stories',
-    'manage-profile-fields',
-    'add-new-profile-field',
-    'edit-profile-field',
-    'manage-verification-reqeusts',
-    'payment-reqeuests',
-    'affiliates-settings',
-    'referrals-list',
-    'pro-memebers',
-    'pro-settings',
-    'pro-payments',
-    'payment-settings',
-    'manage-pages',
-    'manage-groups',
-    'manage-posts',
-    'manage-articles',
-    'manage-events',
-    'manage-forum-sections',
-    'manage-forum-forums',
-    'manage-forum-threads',
-    'manage-forum-messages',
-    'create-new-section',
-    'create-new-forum',
-    'manage-movies',
-    'add-new-movies',
-    'manage-games',
-    'add-new-game',
-    'ads-settings',
-    'manage-site-ads',
-    'manage-user-ads',
-    'manage-themes',
-    'manage-site-design',
-    'manage-announcements',
-    'mass-notifications',
-    'ban-users',
-    'generate-sitemap',
-    'manage-invitation-keys',
-    'backups',
-    'manage-custom-pages',
-    'add-new-custom-page',
-    'edit-custom-page',
-    'edit-terms-pages',
-    'manage_terms_pages',
-    'manage-reports',
-    'push-notifications-system',
-    'manage-api-access-keys',
-    'verfiy-applications',
-    'manage-updates',
-    'changelog',
-    'online-users',
-    'custom-code',
-    'manage-third-psites',
-    'edit-movie',
-    'auto-delete',
-    'manage-gifts',
-    'add-new-gift',
-    'post-settings',
-    'manage-stickers',
-    'add-new-sticker',
-    'manage-apps',
-    'auto-friend',
-    'fake-users',
-    'manage-genders',
-    'pages-categories',
-    'groups-categories',
-    'blogs-categories',
-    'products-categories',
-    'bank-receipts',
-    'manage-currencies',
-    'manage-colored-posts',
-    'job-categories',
-    'manage-fund',
-    'manage-jobs',
-    'auto-like',
-    'auto-join',
-    'manage-reactions',
-    'pages-sub-categories',
-    'groups-sub-categories',
-    'products-sub-categories',
-    'pages-fields',
-    'groups-fields',
-    'products-fields',
-    'pro-features',
-    'pro-refund',
-    'manage-offers',
-    'manage-invitation',
-    'send_email',
-    'live',
-    'node',
-    'manage_emails',
-    'ffmpeg',
-    'manage-permissions',
-    'store-settings',
-    'manage-products',
-    'manage-orders',
-    'manage-reviews',
-    'website_mode',
-    'user_reports',
-    'edit-forum',
-    'edit-section',
-    'cronjob_settings',
-    'system_status',
-    "upload-to-storage",
-    "ai-settings",
-    "manage-content-monetization",
-);
-$wo['mod_pages'] = array('dashboard', 'post-settings', 'manage-stickers', 'manage-gifts', 'manage-users', 'online-users', 'manage-stories', 'manage-pages', 'manage-groups', 'manage-posts', 'manage-articles', 'manage-events', 'manage-forum-threads', 'manage-forum-messages', 'manage-movies', 'manage-games', 'add-new-game', 'manage-user-ads', 'manage-reports', 'manage-third-psites', 'edit-movie','bank-receipts','job-categories','manage-jobs');
+
+$pages = $auto_pages;
+$wo['mod_pages'] = $wo_mod_pages;
 
 
 if (!empty($_GET['page'])) {
     $page = Wo_Secure($_GET['page'], 0);
 }
 $wo['decode_android_v']  = $wo['config']['footer_background'];
-$wo['decode_android_value']  = base64_decode('I2FhYQ==');
+$wo['decode_android_value']  = $base64_decode;
 
 $wo['decode_android_n_v']  = $wo['config']['footer_background_n'];
-$wo['decode_android_n_value']  = base64_decode('I2FhYQ==');
+$wo['decode_android_n_value']  = $base64_decode;
 
 $wo['decode_ios_v']  = $wo['config']['footer_background_2'];
-$wo['decode_ios_value']  = base64_decode('I2FhYQ==');
+$wo['decode_ios_value']  = $base64_decode;
 
 $wo['decode_windwos_v']  = $wo['config']['footer_text_color'];
 $wo['decode_windwos_value']  = base64_decode('I2RkZA==');

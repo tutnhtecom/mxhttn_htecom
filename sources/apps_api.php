@@ -1,4 +1,5 @@
 <?php
+require_once('assets/includes/data_general.php');
 $limit  = 20;
 if (isset($_GET['limit']) && !empty($_GET['limit']) && is_numeric($_GET['limit']) && $_GET['limit'] > 0) {
     $limit = Wo_Secure($_GET['limit']);
@@ -9,92 +10,64 @@ if (!is_numeric($limit)) {
 if ($limit > 100) {
     $limit = 100;
 }
-$api_version = '1.4.4';
+$api_version = env("APP_VERSION");
 if (empty($_GET['access_token'])) {
     $errors = array(
-        'status' => 400,
+        'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 1,
+            'error_code' => $error_code_1,
             'message' => 'Unauthorized'
         )
     );
-    header("Content-type: application/json");
+    header($content_types);
     echo json_encode($errors, JSON_PRETTY_PRINT);
     exit();
 }
 if (empty($_GET['type'])) {
     $errors = array(
-        'status' => 400,
+        'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 5,
+            'error_code' => $error_code_5,
             'message' => 'API type is not specified'
         )
     );
-    header("Content-type: application/json");
+    header($content_types);
     echo json_encode($errors, JSON_PRETTY_PRINT);
     exit();
 }
 $user_id = Wo_UserIdFromToken($_GET['access_token']);
 if ($user_id === false) {
     $errors = array(
-        'status' => 400,
+        'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 2,
-            'message' => 'Invalid or Unauthorized token'
+            'error_code' => $error_code_2,
+            'message' => $msg_error_token
         )
     );
-    header("Content-type: application/json");
+    header($content_types);
     echo json_encode($errors, JSON_PRETTY_PRINT);
     exit();
 }
 $user = $wo['user'] = Wo_UserData($user_id);
 if (empty($user) || !is_array($user)) {
     $errors = array(
-        'status' => 400,
+        'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 3,
+            'error_code' => $error_code_3,
             'message' => 'Error found while fetching the data, please try again later.'
         )
     );
-    header("Content-type: application/json");
+    header($content_types);
     echo json_encode($errors, JSON_PRETTY_PRINT);
     exit();
 }
 $wo["loggedin"]           = true;
-$non_allowed = array(
-    'password',
-    'background_image_status',
-    'email_code',
-    'type',
-    'start_up',
-    'start_up_info',
-    'startup_follow',
-    'startup_image',
-    'id',
-    'cover_full',
-    'cover_org',
-    'avatar_org',
-    'app_session',
-    'last_email_sent',
-    'sms_code',
-    'pro_time',
-    'css_file',
-    'src',
-    'followers_data',
-    'following_data',
-    'likes_data',
-    'album_data',
-    'groups_data',
-    'sidebar_data',
-    'showlastseen',
-    'joined',
-    'social_login',
-);
+$non_allowed = $app_api_non_allow;
 if ($_GET['type'] == 'get_user_data') {
     $user_data = array(
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
-        'api_version' => '1.4',
+        'api_version' => env("APP_VERSION"),
         'user_data' => array(
             'username' => $user['username'],
             'email' => $user['email'],
@@ -112,7 +85,7 @@ if ($_GET['type'] == 'get_user_data') {
             'about' => $user['about']
         )
     );
-    header("Content-type: application/json");
+    header($content_types);
     echo json_encode($user_data, JSON_PRETTY_PRINT);
     exit();
 } else if ($_GET['type'] == 'posts_data') {
@@ -126,7 +99,7 @@ if ($_GET['type'] == 'get_user_data') {
                 'error_text' => 'Username is not exists.'
             )
         );
-        header("Content-type: application/json");
+        header($content_types);
         echo json_encode($json_error_data, JSON_PRETTY_PRINT);
         exit();
     }
@@ -143,11 +116,11 @@ if ($_GET['type'] == 'get_user_data') {
                 'error_text' => 'User does not have any posts.'
             )
         );
-        header("Content-type: application/json");
+        header($content_types);
         echo json_encode($json_error_data, JSON_PRETTY_PRINT);
         exit();
     }
-    header("Content-type: application/json");
+    header($content_types);
     foreach ($api_data as $post_data) {
         $result = array();
         $json_data = array(
@@ -188,7 +161,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $result
     ), JSON_PRETTY_PRINT);
@@ -198,7 +171,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $pages
     ), JSON_PRETTY_PRINT);
@@ -208,7 +181,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $groups
     ), JSON_PRETTY_PRINT);
@@ -229,7 +202,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $products
     ), JSON_PRETTY_PRINT);
@@ -253,7 +226,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $following
     ), JSON_PRETTY_PRINT);
@@ -277,7 +250,7 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $following
     ), JSON_PRETTY_PRINT);
@@ -301,11 +274,11 @@ if ($_GET['type'] == 'get_user_data') {
     echo json_encode(array(
         'api_status' => 'success',
         'api_version' => '1.4.4',
-        'status' => 200,
+        'status' => $api_status_success_200,
         'valid_until' => 3600,
         'items' => $following
     ), JSON_PRETTY_PRINT);
     exit();
 }
-exit('Type not found');
+exit($app_api_not_type );
 ?>

@@ -1,5 +1,6 @@
 <?php
 require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 cleanConfigData();
 $is_admin     = Wo_IsAdmin();
 $is_moderoter = Wo_IsModerator();
@@ -33,7 +34,7 @@ $wo['decode_ios_v']  = $wo['config']['footer_background_2'];
 $wo['decode_ios_value']  = $base64_decode;
 
 $wo['decode_windwos_v']  = $wo['config']['footer_text_color'];
-$wo['decode_windwos_value']  = base64_decode('I2RkZA==');
+$wo['decode_windwos_value']  = $base64_decode_za;
 $data = array();
 $wo['script_root'] = dirname(__FILE__);
 $text = Wo_LoadAdminPage($page . '/content');

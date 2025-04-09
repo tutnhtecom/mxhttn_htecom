@@ -243,4 +243,44 @@ $login_with_types = [
     'TikTok',
     'WordPress'
 ];
-$base64_decode = base64_decode('I2FhYQ==');
+$base64_decode      = base64_decode('I2FhYQ==');
+$base64_decode_za   = base64_decode('I2RkZA==');
+$content_types      = "Content-type: application/json";
+$msg_error_token    = "Invalid or Unauthorized token";
+$app_api_non_allow  = [
+    'password',
+    'background_image_status',
+    'email_code',
+    'type',
+    'start_up',
+    'start_up_info',
+    'startup_follow',
+    'startup_image',
+    'id',
+    'cover_full',
+    'cover_org',
+    'avatar_org',
+    'app_session',
+    'last_email_sent',
+    'sms_code',
+    'pro_time',
+    'css_file',
+    'src',
+    'followers_data',
+    'following_data',
+    'likes_data',
+    'album_data',
+    'groups_data',
+    'sidebar_data',
+    'showlastseen',
+    'joined',
+    'social_login',
+];
+$app_api_not_type   = 'Type not found';
+$error_code_1 = 1;
+$error_code_2 = 2;
+$error_code_3 = 3;
+$error_code_4 = 4;
+$error_code_5 = 5;
+$error_code_6 = 6;
+$error_code_7 = 7;

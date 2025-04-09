@@ -1,9 +1,10 @@
 <?php
+require_once('assets/includes/data_general.php');
 if (empty($_GET['access_token'])) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 1,
+            'error_code' => $error_code_1,
             'message' => 'Unauthorized'
         )
     );
@@ -14,10 +15,10 @@ if (empty($_GET['access_token'])) {
 $user_id = Wo_UserIdFromToken($_GET['access_token']);
 if ($user_id === false) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 2,
-            'message' => 'Invalid or Unauthorized token'
+            'error_code' => $error_code_2,
+            'message' => $msg_error_token
         )
     );
     header("Content-type: application/json");
@@ -28,9 +29,9 @@ if ($user_id === false) {
 $user = Wo_UserData($user_id);
 if (empty($user) || !is_array($user)) {
 	$errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 3,
+            'error_code' => $error_code_3,
             'message' => 'Error found while fetching the data, please try again later.'
         )
     );

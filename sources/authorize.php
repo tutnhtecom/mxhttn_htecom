@@ -1,9 +1,10 @@
 <?php
+require_once('assets/includes/data_general.php');
 if (empty($_GET['app_id'])) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 1,
+            'error_code' => $error_code_1,
             'message' => 'Empty app ID'
         )
     );
@@ -13,9 +14,9 @@ if (empty($_GET['app_id'])) {
 }
 if (empty($_GET['app_secret'])) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 2,
+            'error_code' => $error_code_2,
             'message' => 'Empty app secret'
         )
     );
@@ -25,9 +26,9 @@ if (empty($_GET['app_secret'])) {
 }
 if (empty($_GET['code'])) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 3,
+            'error_code' => $error_code_3,
             'message' => 'Empty code'
         )
     );
@@ -37,9 +38,9 @@ if (empty($_GET['code'])) {
 }
 if (Wo_VerifyAPIApii($_GET['app_id'], $_GET['app_secret']) === false) {
 	$errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 4,
+            'error_code' => $error_code_4,
             'message' => 'App id not found or secret id is wrong'
         )
     );
@@ -49,9 +50,9 @@ if (Wo_VerifyAPIApii($_GET['app_id'], $_GET['app_secret']) === false) {
 }
 if (empty($_GET['code'])) {
     $errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 5,
+            'error_code' => $error_code_5,
             'message' => 'Empty code'
         )
     );
@@ -62,9 +63,9 @@ if (empty($_GET['code'])) {
 $code = Wo_GetCode($_GET['code']);
 if (empty($code)) {
 	$errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 6,
+            'error_code' => $error_code_6,
             'message' => 'Code is invalid'
         )
     );
@@ -74,9 +75,9 @@ if (empty($code)) {
 }
 if (Wo_AppHasPermission($code['user_id'], $code['app_id']) === false) {
 	$errors = array(
-    	'status' => 400,
+    	'status' => $api_status_errors_400,
         'errors' => array(
-            'error_code' => 7,
+            'error_code' => $error_code_7,
             'message' => 'No permission givin'
         )
     );

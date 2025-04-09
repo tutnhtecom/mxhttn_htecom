@@ -1,10 +1,7 @@
 <?php
-require_once('assets/includes/helper.php');
-$types = array(
-    'pro',
-    'wallet',
-    'fund'
-);
+require_once('assets/includes/data_general.php');
+require_once('assets/init.php');
+$types = $check_out_type;
 if (!empty($_POST['type']) && in_array($_POST['type'], $types))
 {
     if (empty($_POST['card_number']) || empty($_POST['card_cvc']) || empty($_POST['card_month']) || empty($_POST['card_year']) || empty($_POST['token']) || empty($_POST['card_name']) || empty($_POST['card_address']) || empty($_POST['card_city']) || empty($_POST['card_state']) || empty($_POST['card_zip']) || empty($_POST['card_country']) || empty($_POST['card_email']) || empty($_POST['card_phone']))
@@ -28,12 +25,7 @@ if (!empty($_POST['type']) && in_array($_POST['type'], $types))
         $amount1 = 0;
         if ($_POST['type'] == 'pro')
         {
-            if (!empty($_POST['pro_type']) && in_array($_POST['pro_type'], array(
-                1,
-                2,
-                3,
-                4
-            )))
+            if (!empty($_POST['pro_type']) && in_array($_POST['pro_type'], $arr_pro_type))
             {
                 $pro_type = $_POST['pro_type'];
                 if ($pro_type == 1)

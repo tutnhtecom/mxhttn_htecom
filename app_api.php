@@ -1,13 +1,10 @@
 <?php
-
 require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 decryptConfigData();
-$api_version  = '1.5.2';
+$api_version  = version();
 $type         = '';
-$applications = array(
-    'phone',
-    'windows_app'
-);
+$applications = $app_api_applications;
 if (!empty($_GET['report_errors'])) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);

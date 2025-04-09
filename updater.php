@@ -1,13 +1,5 @@
 <?php 
-// +------------------------------------------------------------------------+
-// | @author Deen Doughouz (DoughouzForest)
-// | @author_url 1: http://www.wowonder.com
-// | @author_url 2: http://codecanyon.net/user/doughouzforest
-// | @author_email: wowondersocial@gmail.com   
-// +------------------------------------------------------------------------+
-// | WoWonder - The Ultimate Social Networking Platform
-// | Copyright (c) 2017 WoWonder. All rights reserved.
-// +------------------------------------------------------------------------+
+require_once('assets/includes/data_general.php');
 require_once('config.php');
 require_once('assets/includes/tabels.php');
 $f = '';
@@ -134,27 +126,27 @@ if ($f == 'run_updater') {
                                     if (file_exists('wonderful.zip')) {
                                         unlink('wonderful.zip');
                                     }
-                                    $data['status'] = 200;
+                                    $data['status'] = $api_status_success_200;
                                 } else {
-                                    $data['status'] = 400;
+                                    $data['status'] = $api_status_errors_400;
                                     $data['ERROR_NAME'] = 'Error found while updating, please update your site manually.';
                                 }
                             }
                         }  else {
-                            $data['status'] = 400;
+                            $data['status'] = $api_status_errors_400;
                             $data['ERROR_NAME'] = 'Error found while updating, please update your site manually.';
                         }
                     }
                 } else {
-                    $data['status'] = 400;
+                    $data['status'] = $api_status_errors_400;
                     $data['ERROR_NAME'] = 'Error found while updating, please update your site manually.';
                 } 
             } else {
-                $data['status'] = 400;
+                $data['status'] = $api_status_errors_400;
                 $data['ERROR_NAME'] = $check['ERROR_NAME'];
             }
         } else {
-            $data['status'] = 400;
+            $data['status'] = $api_status_errors_400;
             $data['ERROR_NAME'] = 'Error found while updating, please update your site manually.';
         } 
     }

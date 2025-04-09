@@ -1,6 +1,7 @@
 <?php
 // API v2 is not yet finished, you have to use the old API version.
-require_once('assets/includes/helper.php');
+require_once('assets/init.php');
+require_once('assets/includes/data_general.php');
 header_remove('Server');
 header("Content-type: application/json");
 require('assets/init.php');

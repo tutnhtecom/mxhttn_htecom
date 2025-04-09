@@ -30,5 +30,5 @@ function dump_die($data)
 }
 function version()
 {       
-    return '1.5.2';
+    return env("APP_VERSION");
 }

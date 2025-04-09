@@ -7,10 +7,9 @@ error_reporting(0);
 @set_time_limit(0);
 require_once "config.php";
 require_once "assets/libraries/DB/vendor/autoload.php";
-
 $wo           = array();
 // Connect to SQL Server
-$sqlConnect   = $wo["sqlConnect"] = mysqli_connect($sql_db_host, $sql_db_user, $sql_db_pass, $sql_db_name, 3306);
+$sqlConnect   = $wo["sqlConnect"] = mysqli_connect($sql_db_host, $sql_db_user, $sql_db_pass, $sql_db_name, $sql_port);
 // create new mysql connection
 $mysqlMaria   = new Mysql;
 // Handling Server Errors

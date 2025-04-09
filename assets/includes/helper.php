@@ -19,6 +19,10 @@ function env($key) {
     return $value !== false ? $value : null;
 }
 
+function response_data(){
+    
+}
+
 function dump_die($data)
 {
     echo "<pre>" . json_encode($data, JSON_PRETTY_PRINT) . "</pre>";

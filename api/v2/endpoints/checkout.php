@@ -1,4 +1,5 @@
 <?php
+require_once('assets/includes/helper.php');
 $types = array(
     'pro',
     'wallet',
@@ -61,7 +62,7 @@ if (!empty($_POST['type']) && in_array($_POST['type'], $types))
                 $error_code = 5;
                 $error_message = 'pro_type can not be empty';
                 $response_data = array(
-                    'api_status' => '404',
+                    'api_status' => $api_status_errors_404,
                     'errors' => array(
                         'error_id' => $error_code,
                         'error_text' => $error_message
@@ -87,7 +88,7 @@ if (!empty($_POST['type']) && in_array($_POST['type'], $types))
                     $error_code = 10;
                     $error_message = 'fund not found';
                     $response_data = array(
-                        'api_status' => '404',
+                        'api_status' => $api_status_errors_404,
                         'errors' => array(
                             'error_id' => $error_code,
                             'error_text' => $error_message
@@ -102,7 +103,7 @@ if (!empty($_POST['type']) && in_array($_POST['type'], $types))
                 $error_code = 9;
                 $error_message = 'amount , fund_id can not be empty';
                 $response_data = array(
-                    'api_status' => '404',
+                    'api_status' => $api_status_errors_404,
                     'errors' => array(
                         'error_id' => $error_code,
                         'error_text' => $error_message
@@ -123,7 +124,7 @@ if (!empty($_POST['type']) && in_array($_POST['type'], $types))
                 $error_code = 9;
                 $error_message = 'amount can not be empty';
                 $response_data = array(
-                    'api_status' => '404',
+                    'api_status' => $api_status_errors_404,
                     'errors' => array(
                         'error_id' => $error_code,
                         'error_text' => $error_message

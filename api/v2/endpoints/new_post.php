@@ -1,7 +1,6 @@
 <?php
+require_once('assets/includes/helper.php');
 if (!empty($_POST['postText'])) {
-
-
     if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $_POST["postText"], $match)) {
         $youtube_video = Wo_Secure($match[1]);
         $api_request   = file_get_contents('https://www.googleapis.com/youtube/v3/videos?id=' . $youtube_video . '&key=AIzaSyDoOC41IwRzX5XvP7bNiCJXJfcK14HalM0&part=snippet,contentDetails,statistics,status');
@@ -163,7 +162,7 @@ if (isset($_FILES['postVideo']['name']) && empty($mediaFilename)) {
         $error_code    = 8;
         $error_message = 'invalid file';
         $response_data = array(
-            'api_status' => '404',
+            'api_status' => $api_status_errors_404,
             'errors' => array(
                 'error_id' => $error_code,
                 'error_text' => $error_message

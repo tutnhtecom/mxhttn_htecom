@@ -1,13 +1,5 @@
 <?php
-// +------------------------------------------------------------------------+
-// | @author Deen Doughouz (DoughouzForest)
-// | @author_url 1: http://www.wowonder.com
-// | @author_url 2: http://codecanyon.net/user/doughouzforest
-// | @author_email: wowondersocial@gmail.com
-// +------------------------------------------------------------------------+
-// | WoWonder - The Ultimate Social Networking Platform
-// | Copyright (c) 2022 WoWonder. All rights reserved.
-// +------------------------------------------------------------------------+
+
 require_once('assets/init.php');
 decryptConfigData();
 $api_version  = '1.5.2';
@@ -38,7 +30,7 @@ if ($application == 'windows_app') {
     $server_key = (!empty($_POST['server_key'])) ? Wo_Secure($_POST['server_key'], 0) : false;
     if (empty($server_key)) {
         $response_data = array(
-            'api_status' => '404',
+            'api_status' => $api_status_errors_404,
             'errors' => array(
                 'error_id' => '1',
                 'error_text' => 'Error: 404 POST (server_key) not specified, Admin Panel > API Settings > Manage API Server Key'
@@ -49,7 +41,7 @@ if ($application == 'windows_app') {
     }
     if ($server_key != $wo['config']['widnows_app_api_key']) {
         $response_data = array(
-            'api_status' => '404',
+            'api_status' => $api_status_errors_404,
             'errors' => array(
                 'error_id' => '1',
                 'error_text' => 'Error: invalid server key'

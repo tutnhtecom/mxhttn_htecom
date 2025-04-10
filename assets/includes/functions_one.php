@@ -7757,6 +7757,27 @@ function Wo_GetActivities($data = array('after_activity_id' => 0, 'before_activi
     return $get;
 }
 
+function Wo_GetEventsSortedByNewestDate($limit = 4) {
+    global $sqlConnect;
+
+    $data = array();
+
+    // Đảm bảo giới hạn là số hợp lệ
+    $limit = (int)$limit;
+
+    // Câu truy vấn: lấy các sự kiện, sắp xếp theo ngày bắt đầu giảm dần
+    $query = "SELECT * FROM " . T_EVENTS . " ORDER BY `start_date` DESC LIMIT {$limit}";
+
+    $sql = mysqli_query($sqlConnect, $query);
+
+    // Duyệt kết quả và thêm vào mảng kết quả
+    while ($fetched_data = mysqli_fetch_assoc($sql)) {
+        $data[] = $fetched_data;
+    }
+
+    return $data;
+}
+
 function Wo_DeleteReactions($post_id)
 {
     global $wo, $sqlConnect;

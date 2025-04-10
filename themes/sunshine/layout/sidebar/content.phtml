@@ -411,9 +411,9 @@ else{
                 <li class="list-group-item text-muted sidebar-title-back" contenteditable="false"><?php echo $wo['lang']['latest_activities']; ?>
                     <?php if (count($activities) > 0) { ?> <span onclick="Wo_GetMoreActivities();" data-toggle="tooltip" title= "<?php echo $wo['lang']['load_more_activities'];?>" class="<?php echo Wo_RightToLeft('pull-right');?>  refresh" >
                     <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M13 7.54603C13 10.8036 10.3137 13.4443 7 13.4443C3.68629 13.4443 1 10.8036 1 7.54603C1 4.28848 3.66667 1.64772 7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" class="icon_main" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+                    <path d="M13 7.54603C13 10.8036 10.3137 13.4443 7 13.4443C3.68629 13.4443 1 10.8036 1 7.54603C1 4.28848 3.66667 1.64772 7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" class="icon_main" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     </span><?php } ?>
                 </li>
                 <li class="activities-wrapper" id="activities-wrapper">
@@ -422,16 +422,53 @@ else{
                             echo '<h2><div class="no-activities text-center">' . $wo['lang']['no_activities'] . '</div><h2>';
                         } else {
                             foreach ($activities as $wo['activity']) {
-                                echo Wo_LoadPage('sidebar/activities-list');
+                              echo Wo_LoadPage('sidebar/activities-list');
                             }
                         }
-                        ?>
+                    ?>
                 </li>
                 <li>
                     <div class="no-activities center-text"></div>
                 </li>
             </ul>
         </div>
+
+        <div id="sidebar-sticky">
+            <?php $events = Wo_GetEventsSortedByNewestDate();
+              
+              dump_die($events);
+              // dump_die($wo['lang']['events_past']);
+              // dump_die($wo['lang']['events_upcoming']);
+              // dump_die($wo['lang']['browse_events']);
+              // dump_die($wo['lang']['can_use_events']);
+            ?>
+            <ul class="list-group events-container">
+                <li class="list-group-item text-muted sidebar-title-back" contenteditable="false"><?php echo "{$wo['lang']['events']}"; ?>
+                    <?php if (count($events) > 0) { ?> <span onclick="" data-toggle="tooltip" title= "<?php echo $wo['lang']['load_more_activities'];?>" class="<?php echo Wo_RightToLeft('pull-right');?>  refresh" >
+                    <!-- <i class="fa fa-repeat progress-icon" data-icon="repeat"></i> -->
+                    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 7.54603C13 10.8036 10.3137 13.4443 7 13.4443C3.68629 13.4443 1 10.8036 1 7.54603C1 4.28848 3.66667 1.64772 7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 1.64772C11 1.64772 13 4.92456 13 4.92456M13 4.92456L13 1.44434M13 4.92456H9.8966" class="icon_main" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </span><?php } ?>
+                </li>
+                <li class="activities-wrapper" id="activities-wrapper">
+                    <?php
+                        if (count($events) == 0) {
+                            echo '<h2><div class="no-activities text-center">' . $wo['lang']['no_activities'] . '</div><h2>';
+                        } else {
+                            foreach ($events as $wo['event']) {
+                              echo Wo_LoadPage('sidebar/events-list');
+                            }
+                        }
+                    ?>
+                </li>
+                <li>
+                    <div class="no-activities center-text"></div>
+                </li>
+            </ul>
+        </div>
+
     <?php } ?>
         <?php if (!empty($wo['config']['native_android_messenger_url']) || !empty($wo['config']['native_android_timeline_url']) || !empty($wo['config']['native_ios_messenger_url']) || !empty($wo['config']['native_ios_timeline_url']) || !empty($wo['config']['native_windows_messenger_url'])) { ?>
         <ul class="list-group" id="sidebar-group-list-container">

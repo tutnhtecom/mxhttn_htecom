@@ -1,0 +1,62 @@
+<?php
+    $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+    $base_url .= "://" . $_SERVER['HTTP_HOST'];
+    // echo $base_url;
+    function formatVietnameseDate($date) {
+        $timestamp = strtotime($date);
+        if (!$timestamp) return '';
+    
+        $day = date('d', $timestamp);
+        $month = date('n', $timestamp);
+        $year = date('Y', $timestamp);
+    
+        return "$day tháng $month, $year";
+    }
+
+    function getVietnameseDayOfWeek($date) {
+        $days = [
+            'Sunday'    => 'Chủ Nhật',
+            'Monday'    => 'Thứ Hai',
+            'Tuesday'   => 'Thứ Ba',
+            'Wednesday' => 'Thứ Tư',
+            'Thursday'  => 'Thứ Năm',
+            'Friday'    => 'Thứ Sáu',
+            'Saturday'  => 'Thứ Bảy'
+        ];
+    
+        $timestamp = strtotime($date);
+        $englishDay = date('l', $timestamp);
+    
+        return $days[$englishDay] ?? '';
+    }
+
+    function convertTo12HourFormat($time) {
+        return date("h:i A", strtotime($time));
+    }
+?>
+<!-- <link rel="stylesheet" href="./public/css/events_container.css"> -->
+<link rel="stylesheet" href="<?= $base_url ?>/public/css/events_container.css">
+
+<div class="events_container" data-events-id="<?php echo $wo['event']['id']; ?>">
+    <div class="events_col">
+        <div class="events_image">
+            <img src="<?php echo $wo['event']['cover'] ? $base_url .'/'. $wo['event']['cover'] : ''; ?>" alt="Sự kiện">
+            <div class="events_image_time"> 
+                <span><?php echo formatVietnameseDate($wo['event']['start_date']) ?></span>
+            </div>
+        </div>
+        <div class="events_dayoftheweek">
+            <span><?php echo getVietnameseDayOfWeek($wo['event']['start_date']) ?></span>,
+            <span><?php echo convertTo12HourFormat($wo['event']['start_time']) ?></span>
+        </div> 
+
+        <div class="events_name">
+            <span><?php echo $wo['event']['name'] ?></span>
+        </div>
+
+        <div class="events_location">
+            <span><?php echo $wo['event']['location'] ?></span>
+        </div> 
+        <div class="clear"></div> 
+    </div>
+</div>

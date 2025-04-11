@@ -35,7 +35,7 @@ function Wo_CheckMainSession($hash = '') {
 }
 $wo         = array();
 // Connect to SQL Server
-$sqlConnect = mysqli_connect($sql_db_host, $sql_db_user, $sql_db_pass, $sql_db_name, 3306);
+$sqlConnect = mysqli_connect($sql_db_host, $sql_db_user, $sql_db_pass, $sql_db_name, $sql_port);
 function Wo_Secure($string, $censored_words = 1) {
     global $sqlConnect;
     $string = trim($string);

@@ -1,5 +1,13 @@
 <?php
 require_once('assets/includes/helper.php');
+$app_api_not_type   = 'Type not found';
+$error_code_1 = 1;
+$error_code_2 = 2;
+$error_code_3 = 3;
+$error_code_4 = 4;
+$error_code_5 = 5;
+$error_code_6 = 6;
+$error_code_7 = 7;
 $api_status_errors_404      = 404;
 $api_status_errors_400      = 400;
 $api_status_success_200     = 200;
@@ -276,11 +284,13 @@ $app_api_non_allow  = [
     'joined',
     'social_login',
 ];
-$app_api_not_type   = 'Type not found';
-$error_code_1 = 1;
-$error_code_2 = 2;
-$error_code_3 = 3;
-$error_code_4 = 4;
-$error_code_5 = 5;
-$error_code_6 = 6;
-$error_code_7 = 7;
+$admin_sidebar = [
+    "dashboard"         =>  "dashboard",
+    "setting"           =>  "setting",
+    "website_mode"      =>  "website_mode", // Chưa cài đặt
+    "general_setting"   =>  "general_setting",
+    "site_setting"      =>  "site_setting",
+    "amazon_setting"    =>  "amazon_setting",
+    "email_setting"     =>  "email_setting",
+    "video_setting"     =>  "video_setting",
+];

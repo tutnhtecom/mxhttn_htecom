@@ -510,7 +510,8 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                             <span class="nav-link-icon">
                                 <i class="material-icons">dashboard</i>
                             </span>
-                            <span>Dashboard</span>
+                            <span> <?php echo $wo['lang']['dashboard'] ?></span>
+                            
                         </a>
                     </li>
                     <?php } ?>
@@ -521,7 +522,8 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                             <span class="nav-link-icon">
                                 <i class="material-icons">settings</i>
                             </span>
-                            <span>Settings</span>
+                            <!-- <span>Settings</span> -->
+                            <span> <?php echo $wo['lang']['setting'] ?></span>
                         </a>
                         <ul class="ml-menu">
                           <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['website_mode'] == 1)) { ?>

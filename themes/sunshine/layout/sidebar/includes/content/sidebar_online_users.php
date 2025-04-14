@@ -1,4 +1,4 @@
-<ul class="list-group wow_side_invite_prnt">
+<!-- <ul class="list-group wow_side_invite_prnt">
     <?php if ($wo['config']['online_sidebar'] == 1) { ?>
         <?php $online = Wo_CountOnlineData(); ?>
         <div class="wow_side_online">
@@ -46,4 +46,4 @@
             </form>
         </div>
     <?php } ?>
-</ul>
+</ul> -->

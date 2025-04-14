@@ -2,14 +2,14 @@
     <div class="col-md-3 sidebar rightcol">        
         <div class="wow_content wow_side_loggd_usr">
             <div class="wow_side_loggd_usr_cvr">
-                <img src="http://localhost:8081/upload/photos/d-cover.jpg?cache=0" alt="Trần Ngọc Tú Cover Image">
+                <img src="http://localhost:8081/upload/photos/d-cover.jpg?cache=0" alt="admin Cover Image">
             </div>
             <div class="wow_side_loggd_usr_hdr">
                 <div class="avatar">
                     <img id="updateImage-1" alt="Trần Ngọc Tú Profile Picture" src="http://localhost:8081/upload/photos/2025/04/KAWUB7mPPPfu6pkPP8C9_11_94fb6656679375491ff0c0fe4c311087_avatar.jpg?cache=0"  class="seen_story see_all_stories" data_story_user_id="1" data_story_type="user" >
                 </div>
                 <div class="title">
-                    <a id="user-full-name" data-ajax="?link1=timeline&u=admin" href="http://localhost:8081/admin">Trần Ngọc Tú                                            </a>
+                    <a id="user-full-name" data-ajax="?link1=timeline&u=admin" href="http://localhost:8081/admin">admin                                            </a>
                     <p>@admin</p>
                 </div>
             </div>
@@ -183,8 +183,8 @@
 		<div class="notification-text wo_sidebar_activity">
 			<div>
 			<span class="user-popover" data-id="2" data-type="user">
-				<a class="main-color" href="http://localhost:8081/ntsoftware " data-ajax="?link1=timeline&u=ntsoftware">
-					ntsoftware				</a>
+				<a class="main-color" href="http://localhost:8081/AnhQuan " data-ajax="?link1=timeline&u=AnhQuan">
+					AnhQuan				</a>
 			</span>
 			đã bắt đầu theo dõi <a class="second-user-color" data-ajax="?link1=timeline&u=admin" href="http://localhost:8081/admin">Trần Ngọc Tú</a>			<div class="notification-time active">
 				<span class="ajax-time" title="2025-04-04T04:51:31+00:00">

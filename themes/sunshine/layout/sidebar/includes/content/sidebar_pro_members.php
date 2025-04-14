@@ -1,5 +1,5 @@
 <?php if ($wo['config']['pro'] == 1) { ?>
-    <div class="featured-users">
+    <!-- <div class="featured-users">
         <li class="list-group-item sidebar-title-back" contenteditable="false">
             <?php if ($wo['user']['is_pro'] == 0) { ?>
                 <a class="pro-me-here pull-right" href="<?php echo Wo_SeoLink('index.php?link1=go-pro'); ?>" data-ajax="?link1=go-pro"><?php echo $wo['lang']['put_me_here']; ?></a>
@@ -16,5 +16,5 @@
             }
             ?>
         </ul>
-    </div>
+    </div> -->
 <?php } ?>

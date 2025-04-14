@@ -1112,7 +1112,9 @@ if (!empty($wo['story']['parent_id'])) {
       </div>
       <h6>
          <span class="time">
-         <a  style="color:#9197a3" class="ajax-time" href="<?php echo $wo['story']['url'];?>" title="<?php echo date('c',$wo['story']['time']); ?>" target="_blank"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></a>
+         <a  style="color:#9197a3" class="ajax-time" href="<?php echo $wo['story']['url'];?>" title="<?php echo date('c',$wo['story']['time']); ?>" target="_blank">
+            <?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?>
+         </a>
          </span>
          <?php if ($wo['story']['ai_post'] == 1) { ?>
               <span class="time" title="<?php echo $wo['lang']['content_generated_ai'];?>"> - <?php echo $wo['lang']['ai'];?></span>

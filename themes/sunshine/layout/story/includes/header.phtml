@@ -621,8 +621,8 @@ if (!empty($wo['story']['parent_id'])) {
    <div class="<?php echo Wo_RightToLeft('pull-left');?> image">
       <?php if (!isset($anonymous)) { ?>
       <a href="<?php echo $wo['story']['publisher']['url']; ?>" data-ajax="?link1=timeline&u=<?php echo $wo['story']['publisher']['username']?>" class="avatar wow_post_usr_ava <?php if($wo['story']['publisher']['verified'] == 1) { ?>wow_post_usr_ava_active<?php } ?>">
-         <img src="<?php echo $wo['story']['publisher']['avatar']; ?>" class="blur_img" alt="<?php echo $wo['story']['publisher']['name']; ?> profile picture">
-		 <img src="<?php echo $wo['story']['publisher']['avatar']; ?>" id="updateImage-<?php echo $wo['story']['publisher']['user_id']?>" alt="<?php echo $wo['story']['publisher']['name']; ?> profile picture">
+         <!-- <img src="<?php echo $wo['story']['publisher']['avatar']; ?>" class="blur_img" alt="<?php echo $wo['story']['publisher']['name']; ?> profile picture"> -->
+		   <img src="<?php echo $wo['story']['publisher']['avatar']; ?>" id="updateImage-<?php echo $wo['story']['publisher']['user_id']?>" alt="<?php echo $wo['story']['publisher']['name']; ?> profile picture" style="border-radius:50%;">
          <?php if($wo['story']['publisher']['verified'] == 1) { ?>
             <span class="verified-color">
                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="feather feather-check-circle" title="<?php echo ($wo['story']['page_id'] > 0 ? $wo['lang']['verified_page'] : $wo['lang']['verified_user']);?>" data-toggle="tooltip">

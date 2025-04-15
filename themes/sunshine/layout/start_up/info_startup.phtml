@@ -61,10 +61,10 @@
 					$birthday = explode('-', $wo['user']['birthday']);
 				}
 			?>
-			<div class="wow_form_fields">
+			<!-- <div class="wow_form_fields">
 				<label for="usr_birthday"><?php echo $wo['lang']['birthday']; ?></label>
 				<input id="usr_birthday" name="birthday" type="text" class="form-control input-md" placeholder="<?php echo $wo['lang']['birthday']; ?>" autocomplete="off"> 
-			</div>
+			</div> -->
 			<input type="hidden" name="user_id" value="<?php echo $wo['user']['user_id'];?>">
 			<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
 		</form>

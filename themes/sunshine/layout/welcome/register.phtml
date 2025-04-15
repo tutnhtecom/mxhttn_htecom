@@ -1,5 +1,6 @@
 <?php
 $fields = Wo_GetWelcomeFileds();
+// dump_die( $wo['lang']);
 ?>
 <div class="wrapper">
 	<div class="login">
@@ -54,6 +55,19 @@ $fields = Wo_GetWelcomeFileds();
 							<input id="phone_num_ex" name="phone_num" type="text" placeholder="<?php echo $wo['lang']['phone_num_ex']?>" />
 						</div>
 					<?php } ?>
+					<!-- <div class="wow_form_fields mt-0">
+						<label for="gender"><?php echo $wo['lang']['gender']?></label>
+						<select name="gender" id="gender">
+							<option value="0"><?php echo $wo['lang']['gender']?></option>
+							<?php foreach ($wo['genders'] as $key => $gender) { ?>
+								<option value="<?php echo($key) ?>"><?php echo $gender; ?></option>
+							<?php } ?>
+						</select>
+					</div> -->
+					<div class="wow_form_fields mt-0">
+						<label for="birthday"><?php echo $wo['lang']['birthday']?></label>
+						<input id="birthday" name="birthday" type="date" placeholder="<?php echo $wo['lang']['birthday']?>" />
+					</div>
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="wow_form_fields mt-0">
@@ -76,15 +90,7 @@ $fields = Wo_GetWelcomeFileds();
 							</div>
 						</div>
 					</div>
-					<div class="wow_form_fields mt-0">
-						<label for="gender"><?php echo $wo['lang']['gender']?></label>
-						<select name="gender" id="gender">
-							<option value="0"><?php echo $wo['lang']['gender']?></option>
-							<?php foreach ($wo['genders'] as $key => $gender) { ?>
-								<option value="<?php echo($key) ?>"><?php echo $gender; ?></option>
-							<?php } ?>
-						</select>
-					</div>
+					
 					<?php
 						if (!empty($fields) && count($fields) > 0) {
 							foreach ($fields as $key => $wo['field']) {

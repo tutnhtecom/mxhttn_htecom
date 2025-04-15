@@ -40,10 +40,12 @@
 					$cutoff   = 1930;
 					$now      = date('Y');
 					$birthday = explode('-', $wo['setting']['birthday']);
+					$date = $wo['setting']['birthday'];
+					$formattedDate = date('d-m-Y', strtotime($date));
 				?>
 				<div class="wow_form_fields">
 					<label for="usr_birthday"><?php echo $wo['lang']['birthday']; ?></label>
-					<input id="usr_birthday" name="birthday" type="text" autocomplete="off" value="<?php echo $wo['setting']['birthday']?>"> 
+					<input id="usr_birthday" name="birthday" type="text" autocomplete="off" value="<?php echo $formattedDate;?>"> 
 				</div>
 			</div>
 			<div class="col-md-6">

@@ -1,9 +1,87 @@
 <?php
-cleanConfigData();
 require_once('assets/includes/helper.php');
 require_once('assets/includes/data_general.php');
+cleanConfigData();
 $page  = 'dashboard';
-include('includes/admin_autoload/f_data.php');
+$wo['all_pages'] = scandir('admin-panel/pages');
+unset($wo['all_pages'][0]);
+unset($wo['all_pages'][1]);
+unset($wo['all_pages'][2]);
+// Get data từ file assets/includes/data_general.php
+$pages = $auto_pages;
+$wo['mod_pages'] = $wo_mod_pages;
+
+if (!empty($_GET['page'])) {
+    $page = Wo_Secure($_GET['page'], 0);
+}
+$wo['decode_android_v']  = $wo['config']['footer_background'];
+$wo['decode_android_value']  = base64_decode('I2FhYQ==');
+
+$wo['decode_android_n_v']  = $wo['config']['footer_background_n'];
+$wo['decode_android_n_value']  = base64_decode('I2FhYQ==');
+
+$wo['decode_ios_v']  = $wo['config']['footer_background_2'];
+$wo['decode_ios_value']  = base64_decode('I2FhYQ==');
+
+$wo['decode_windwos_v']  = $wo['config']['footer_text_color'];
+$wo['decode_windwos_value']  = base64_decode('I2RkZA==');
+if ($is_moderoter && !empty($wo['user']['permission'])) {
+    $wo['user']['permission'] = json_decode($wo['user']['permission'], true);
+
+    if (!in_array($page, array_keys($wo['user']['permission']))) {
+        $wo['user']['permission'][$page] = 0;
+        $permission = json_encode($wo['user']['permission']);
+        $db->where('user_id', $wo['user']['user_id'])->update(T_USERS, array('permission' => $permission));
+
+        cache($wo['user']['id'], 'users', 'delete');
+        header("Location: " . Wo_LoadAdminLinkSettings($page));
+        exit();
+    } else {
+        if ($wo['user']['permission'][$page] == 0) {
+            foreach ($wo['user']['permission'] as $key => $value) {
+                if ($value == 1) {
+                    header("Location: " . Wo_LoadAdminLinkSettings($key));
+                    exit();
+                }
+            }
+        }
+    }
+} elseif ($is_moderoter && empty($wo['user']['permission'])) {
+    $permission = array();
+    if (!empty($wo['all_pages'])) {
+        foreach ($wo['all_pages']  as $key => $value) {
+            if (in_array($value, $wo['mod_pages'])) {
+                $permission[$value] = 1;
+            } else {
+                $permission[$value] = 0;
+            }
+        }
+    }
+    $permission = json_encode($permission);
+    $db->where('user_id', $wo['user']['user_id'])->update(T_USERS, array('permission' => $permission));
+    cache($wo['user']['id'], 'users', 'delete');
+    $wo['user'] = Wo_UserData($wo['user']['user_id']);
+}
+// if ($is_moderoter == true && $is_admin == false) {
+//     if (!in_array($page, $wo['mod_pages'])) {
+//         header("Location: " . Wo_SeoLink('index.php?link1=admin-cp'));
+//         exit();
+//     }
+// }
+if (in_array($page, $pages)) {
+    $page_loaded = Wo_LoadAdminPage("$page/content");
+}
+if (empty($page_loaded)) {
+    header("Location: " . Wo_SeoLink('index.php?link1=admin-cp'));
+    exit();
+}
+$notify_count = $db->where('recipient_id', 0)->where('admin', 1)->where('seen', 0)->getValue(T_NOTIFICATION, 'COUNT(*)');
+$notifications = $db->where('recipient_id', 0)->where('admin', 1)->where('seen', 0)->orderBy('id', 'DESC')->get(T_NOTIFICATION);
+$old_notifications = $db->where('recipient_id', 0)->where('admin', 1)->where('seen', 0, '!=')->orderBy('id', 'DESC')->get(T_NOTIFICATION, 5);
+$mode = 'day';
+if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
+    $mode = 'night';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,16 +110,12 @@ include('includes/admin_autoload/f_data.php');
     <link rel="stylesheet" href="<?php echo (Wo_LoadAdminLink('assets/css/app.css')) ?>" type="text/css">
     <!-- Main scripts -->
     <script src="<?php echo (Wo_LoadAdminLink('vendors/bundle.js')) ?>"></script>
-
     <!-- Apex chart -->
     <script src="<?php echo (Wo_LoadAdminLink('vendors/charts/apex/apexcharts.min.js')) ?>"></script>
-
     <!-- Daterangepicker -->
     <script src="<?php echo (Wo_LoadAdminLink('vendors/datepicker/daterangepicker.js')) ?>"></script>
-
     <!-- DataTable -->
     <script src="<?php echo (Wo_LoadAdminLink('vendors/dataTable/datatables.min.js')) ?>"></script>
-
     <!-- Dashboard scripts -->
     <script src="<?php echo (Wo_LoadAdminLink('assets/js/examples/pages/dashboard.js')) ?>"></script>
     <script src="<?php echo Wo_LoadAdminLink('vendors/charts/chartjs/chart.min.js'); ?>"></script>
@@ -67,6 +141,10 @@ include('includes/admin_autoload/f_data.php');
     <link rel="stylesheet" href="<?php echo Wo_LoadAdminLink('vendors/codemirror-5.30.0/lib/codemirror.css'); ?>">
     <?php //} 
     ?>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <?php if ($page == 'bank-receipts' || $page == 'manage-verification-reqeusts' || $page == 'monetization-requests' || $page == 'manage-user-ads') { ?>
         <!-- Css -->
         <link rel="stylesheet" href="<?php echo (Wo_LoadAdminLink('vendors/lightbox/magnific-popup.css')) ?>" type="text/css">
@@ -492,276 +570,107 @@ include('includes/admin_autoload/f_data.php');
                         <i class="ti-close"></i>
                     </a>
                 </div>
-                <!-- Left Sidebar  -->
-                <!-- ------------------------------------------------------------------------------------------------------------------- -->
                 <div class="navigation-menu-body">
                     <ul>
-                        <!-- --------------------------------------------------------------------------------------------------- -->
-                        <!-- Dashboard -->
-                        <!-- --------------------------------------------------------------------------------------------------- -->
-                        <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['dashboard'] == 1)) {
-                            include("includes/admin_autoload/dashboard.php");
-                        } ?>
-                        <!-- --------------------------------------------------------------------------------------------------- -->
+                        <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['dashboard'] == 1)) { ?>
+                            <li>
+                                <a <?php echo ($page == 'dashboard') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings(''); ?>" data-ajax="?path=dashboard">
+                                    <span class="nav-link-icon">
+                                        <i class="material-icons">dashboard</i>
+                                    </span>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                        <?php } ?>
 
-                        <!-- Setting -->
-                        <!-- --------------------------------------------------------------------------------------------------- -->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['post-settings'] == 1 || $wo['user']['permission']['manage-colored-posts'] == 1 || $wo['user']['permission']['manage-reactions'] == 1 || $wo['user']['permission']['live'] == 1 || $wo['user']['permission']['general-settings'] == 1 || $wo['user']['permission']['site-settings'] == 1 || $wo['user']['permission']['amazon-settings'] == 1 || $wo['user']['permission']['email-settings'] == 1 || $wo['user']['permission']['video-settings'] == 1 || $wo['user']['permission']['social-login'] == 1 || $wo['user']['permission']['node'] == 1 || $wo['user']['permission']['cronjob_settings'] == 1))) { ?>
-
                             <li <?php echo ($page == 'general-settings' || $page == 'post-settings' || $page == 'site-settings' || $page == 'email-settings' || $page == 'social-login' || $page == 'site-features' || $page == 'amazon-settings' ||  $page == 'video-settings' || $page == 'manage-currencies' || $page == 'manage-colored-posts' || $page == 'live' || $page == 'node' || $page == 'manage-reactions' || $page == 'ffmpeg' || $page == 'cronjob_settings') ? 'class="open"' : ''; ?>>
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">settings</i>
                                     </span>
-                                    <span> <?php echo $wo['lang']['setting'] ?></span>
+                                    <span>Settings</span>
                                 </a>
-                                <!-- Child Settings -->
                                 <ul class="ml-menu">
-                                    <!-- Chế độ trang web -->
-                                    <!-- ------------------------------------------ -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['website_mode'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'website_mode') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('website_mode'); ?>" data-ajax="?path=website_mode">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['website_mode'])) {
-                                                        echo $wo['lang']['website_mode'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["website_mode"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'website_mode') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('website_mode'); ?>" data-ajax="?path=website_mode">Website Mode</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- ------------------------------------------ -->
-                                    <!-- Cài đặt chung-->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['general-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'general-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('general-settings'); ?>" data-ajax="?path=general-settings">
-                                                <span>
-                                                    <?php
-                                                    // echo $admin_sidebar_default["general_setting"];
-                                                    if (isset($wo['lang']['general_setting'])) {
-                                                        echo $wo['lang']['general_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["general_setting"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'general-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('general-settings'); ?>" data-ajax="?path=general-settings">General Configuration</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- ------------------------------------------ -->
-                                    <!-- Thông tin website -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['site-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'site-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('site-settings'); ?>" data-ajax="?path=site-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['site_information'])) {
-                                                        echo $wo['lang']['site_information'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["site_information"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'site-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('site-settings'); ?>" data-ajax="?path=site-settings">Website Information</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- ------------------------------------------ -->
-                                    <!-- Thiết lập cấu hình tải tệp -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['amazon-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'amazon-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('amazon-settings'); ?>" data-ajax="?path=amazon-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['file_upload_config'])) {
-                                                        echo $wo['lang']['file_upload_config'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["file_upload_config"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'amazon-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('amazon-settings'); ?>" data-ajax="?path=amazon-settings">File Upload Configuration</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Cài đặt email và SMS -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['email-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'email-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('email-settings'); ?>" data-ajax="?path=email-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['email_sms_setup'])) {
-                                                        echo $wo['lang']['email_sms_setup'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["email_sms_setup"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'email-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('email-settings'); ?>" data-ajax="?path=email-settings">E-mail & SMS Setup</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Trò chuyện & Video/Âm thanh -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['video-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'video-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('video-settings'); ?>" data-ajax="?path=video-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['chat_video_audio'])) {
-                                                        echo $wo['lang']['chat_video_audio'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["chat_video_audio"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'video-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('video-settings'); ?>" data-ajax="?path=video-settings">Chat & Video/Audio</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Cài đặt mạng xã hội -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['social-login'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'social-login') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('social-login'); ?>" data-ajax="?path=social-login">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['social_login_setting'])) {
-                                                        echo $wo['lang']['social_login_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["social_login_setting"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'social-login') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('social-login'); ?>" data-ajax="?path=social-login">Social Login Settings</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Cài đặt nodejs -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['node'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'node') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('node'); ?>" data-ajax="?path=node">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['nodejs_setting'])) {
-                                                        echo $wo['lang']['nodejs_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["nodejs_setting"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'node') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('node'); ?>" data-ajax="?path=node">NodeJS Settings</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Cài đặt CronJob -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['cronjob_settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'cronjob_settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('cronjob_settings'); ?>" data-ajax="?path=cronjob_settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['cronjob_setting'])) {
-                                                        echo $wo['lang']['cronjob_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["cronjob_setting"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'cronjob_settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('cronjob_settings'); ?>" data-ajax="?path=cronjob_settings">CronJob Settings</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Cài đặt AI                                                 -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['ai-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'ai-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ai-settings'); ?>" data-ajax="?path=ai-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['ai_settings'])) {
-                                                        echo $wo['lang']['ai_settings'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["ai_settings"];
-                                                    }
-                                                    ?>
-                                                </span>
-
-                                            </a>
+                                            <a <?php echo ($page == 'ai-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ai-settings'); ?>" data-ajax="?path=ai-settings">AI Settings</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- Post Settings -->
+
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['post-settings'] == 1 || $wo['user']['permission']['manage-colored-posts'] == 1 || $wo['user']['permission']['manage-reactions'] == 1 || $wo['user']['permission']['live'] == 1))) { ?>
                                         <li>
-                                            <!-- Cài đặt bài viết -->
-                                            <a <?php echo ($page == 'post-settings' || $page == 'manage-colored-posts' || $page == 'manage-reactions') ? 'class="open"' : ''; ?> href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['posts_setting'])) {
-                                                        echo $wo['lang']['posts_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["posts_setting"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!-- Mục con của cài đặt bài viết -->
+                                            <a <?php echo ($page == 'post-settings' || $page == 'manage-colored-posts' || $page == 'manage-reactions') ? 'class="open"' : ''; ?> href="javascript:void(0);">Posts Settings</a>
                                             <ul class="ml-menu">
-                                                <!-- Mục con: Cài đặt bài viết -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['post-settings'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'post-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('post-settings'); ?>" data-ajax="?path=post-settings">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['posts_setting'])) {
-                                                                    echo $wo['lang']['posts_setting'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["posts_setting"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Posts Settings</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!-- quản lý bài đăng có màu -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-colored-posts'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-colored-posts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-colored-posts'); ?>" data-ajax="?path=manage-colored-posts">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_colored_posts'])) {
-                                                                    echo $wo['lang']['manage_colored_posts'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_colored_posts"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Colored Posts</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!-- Phản ứng bài đăng  -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-reactions'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-reactions') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-reactions'); ?>" data-ajax="?path=manage-reactions">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['post_reactions'])) {
-                                                                    echo $wo['lang']['post_reactions'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["post_reactions"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Post Reactions</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!-- Cài đặt phát trực tiếp -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['live'] == 1)) { ?>
                                                     <li>
-                                                        <a <?php echo ($page == 'live') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('live'); ?>" data-ajax="?path=live">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['setup_live_Streaming'])) {
-                                                                    echo $wo['lang']['setup_live_Streaming'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["setup_live_streaming"];
-                                                                }
-                                                                ?>
-                                                            </span>
-                                                        </a>
+                                                        <a <?php echo ($page == 'live') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('live'); ?>" data-ajax="?path=live">Setup Live Streaming</a>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
@@ -770,804 +679,311 @@ include('includes/admin_autoload/f_data.php');
                                 </ul>
                             </li>
                         <?php } ?>
-                        <!------------------------------------------------------------------------------------------------------->
-                        <!-- Quản lý tính nắng -->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-apps'] == 1 || $wo['user']['permission']['manage-pages'] == 1 || $wo['user']['permission']['manage-stickers'] == 1 || $wo['user']['permission']['add-new-sticker'] == 1 || $wo['user']['permission']['manage-gifts'] == 1 || $wo['user']['permission']['add-new-gift'] == 1 || $wo['user']['permission']['manage-groups'] == 1 || $wo['user']['permission']['manage-posts'] == 1 || $wo['user']['permission']['manage-articles'] == 1 || $wo['user']['permission']['manage-events'] == 1 || $wo['user']['permission']['manage-forum-sections'] == 1 || $wo['user']['permission']['manage-forum-forums'] == 1 || $wo['user']['permission']['manage-forum-threads'] == 1 || $wo['user']['permission']['manage-forum-messages'] == 1 || $wo['user']['permission']['create-new-forum'] == 1 || $wo['user']['permission']['create-new-section'] == 1 || $wo['user']['permission']['manage-movies'] == 1 || $wo['user']['permission']['add-new-movies'] == 1 || $wo['user']['permission']['manage-games'] == 1 || $wo['user']['permission']['add-new-game'] == 1 || $wo['user']['permission']['edit-movie'] == 1 || $wo['user']['permission']['pages-categories'] == 1 || $wo['user']['permission']['pages-sub-categories'] == 1 || $wo['user']['permission']['groups-sub-categories'] == 1 || $wo['user']['permission']['products-sub-categories'] == 1 || $wo['user']['permission']['groups-categories'] == 1 || $wo['user']['permission']['blogs-categories'] == 1 || $wo['user']['permission']['products-categories'] == 1 || $wo['user']['permission']['manage-fund'] == 1 || $wo['user']['permission']['manage-jobs'] == 1 || $wo['user']['permission']['manage-offers'] == 1 || $wo['user']['permission']['pages-fields'] == 1 || $wo['user']['permission']['groups-fields'] == 1 || $wo['user']['permission']['products-fields'] == 1))) { ?>
-                            <!-- Manage Features -->
+
                             <li <?php echo ($page == 'manage-apps' || $page == 'manage-pages' || $page == 'manage-stickers' || $page == 'add-new-sticker' || $page == 'manage-gifts' || $page == 'add-new-gift' || $page == 'manage-groups' || $page == 'manage-posts' || $page == 'manage-articles' || $page == 'manage-events' ||  $page == 'manage-forum-sections' || $page == 'manage-forum-forums' || $page == 'manage-forum-threads' || $page == 'manage-forum-messages' || $page == 'create-new-forum' || $page == 'create-new-section' || $page == 'manage-movies' || $page == 'add-new-movies' || $page == 'manage-games' || $page == 'add-new-game' || $page == 'edit-movie' || $page == 'pages-categories' || $page == 'pages-sub-categories' || $page == 'groups-sub-categories' || $page == 'products-sub-categories' || $page == 'groups-categories' || $page == 'blogs-categories' || $page == 'products-categories' || $page == 'manage-fund' || $page == 'manage-jobs' || $page == 'manage-offers' || $page == 'pages-fields' || $page == 'groups-fields' || $page == 'products-fields') ? 'class="open"' : ''; ?>>
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">view_agenda</i>
                                     </span>
-                                    <span>
-                                        <?php
-                                        if (isset($wo['lang']['manage_features'])) {
-                                            echo $wo['lang']['manage_features'];
-                                        } else {
-                                            echo $admin_sidebar_default["manage_features"];
-                                        }
-                                        ?>
-                                    </span>
+                                    <span>Manage Features</span>
                                 </a>
-                                <!-- Sub Manage Features -->
-                                <!-- Enable / Disable Features - Bật tắt tính năng-->
-                                <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
+
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['site-features'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'site-features') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('site-features'); ?>"
-                                                data-ajax="?path=site-features">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['enable_disable_features'])) {
-                                                        echo $wo['lang']['enable_disable_features'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["enable_disable_features"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'site-features') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('site-features'); ?>" data-ajax="?path=site-features">Enable / Disable Features</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- -------------------------------------------------------------------------------- -->
-                                    <!-- Applications -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-apps'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-apps') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-apps'); ?>" data-ajax="?path=manage-apps">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['apps'])) {
-                                                        echo $wo['lang']['apps'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["apps"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-apps') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-apps'); ?>" data-ajax="?path=manage-apps">Applications</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- -------------------------------------------------------------------------------- -->
-                                    <!-- Các trang - Pages -->
-                                    <!-- -------------------------------------------------------------------------------- -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-pages'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-pages'); ?>" data-ajax="?path=manage-pages">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['pages'])) {
-                                                        echo $wo['lang']['pages'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["pages"];
-                                                    }
-                                                    ?>
-                                                </span>
-
-                                            </a>
+                                            <a <?php echo ($page == 'manage-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-pages'); ?>" data-ajax="?path=manage-pages">Pages</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- -------------------------------------------------------------------------------- -->
-                                    <!-- Groups -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-groups'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-groups') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-groups'); ?>" data-ajax="?path=manage-groups">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['groups'])) {
-                                                        echo $wo['lang']['groups'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["groups"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-groups') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-groups'); ?>" data-ajax="?path=manage-groups">Groups</a>
                                         </li>
                                     <?php } ?>
-                                    <!-- -------------------------------------------------------------------------------- -->
-                                    <!-- Posts -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-posts'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-posts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-posts'); ?>" data-ajax="?path=manage-posts">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['posts'])) {
-                                                        echo $wo['lang']['posts'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["posts"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-posts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-posts'); ?>" data-ajax="?path=manage-posts">Posts</a>
                                         </li>
                                     <?php } ?>
-                                    <!---------------------------------------------------------------------------------- -->
-                                    <!-- Kinh phí -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-fund'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-fund') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-fund'); ?>" data-ajax="?path=manage-fund">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['funding'])) {
-                                                        echo $wo['lang']['funding'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["funding"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-fund') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-fund'); ?>" data-ajax="?path=manage-fund">Fundings</a>
                                         </li>
                                     <?php } ?>
-                                    <!---------------------------------------------------------------------------------- -->
-                                    <!-- Công việc - Jobs -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-jobs'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-jobs') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-jobs'); ?>" data-ajax="?path=manage-jobs">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['jobs'])) {
-                                                        echo $wo['lang']['jobs'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["jobs"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-jobs') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-jobs'); ?>" data-ajax="?path=manage-jobs">Jobs</a>
                                         </li>
                                     <?php } ?>
-                                    <!---------------------------------------------------------------------------------- -->
-                                    <!-- Ữu đãi - Offers -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-offers'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-offers') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-offers'); ?>" data-ajax="?path=manage-offers">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['offers'])) {
-                                                        echo $wo['lang']['offers'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["offers"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-offers') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-offers'); ?>" data-ajax="?path=manage-offers">Offers</a>
                                         </li>
                                     <?php } ?>
-                                    <!---------------------------------------------------------------------------------- -->
-                                    <!-- Articles - Bài viết -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-articles'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-articles') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-articles'); ?>" data-ajax="?path=manage-articles">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['articles'])) {
-                                                        echo $wo['lang']['articles'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["articles"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-articles') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-articles'); ?>" data-ajax="?path=manage-articles">Articles (Blog)</a>
                                         </li>
                                     <?php } ?>
-                                    <!---------------------------------------------------------------------------------- -->
-                                    <!-- Sự kiện -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-events'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-events') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-events'); ?>" data-ajax="?path=manage-events">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['events'])) {
-                                                        echo $wo['lang']['events'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["events"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-events') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-events'); ?>" data-ajax="?path=manage-events">Events</a>
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Kiểm tiền từ nội dung - Content Monetization -->
                                     <li>
-                                        <a <?php echo ($page == 'manage-events') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-content-monetization'); ?>" data-ajax="?path=manage-content-monetization">
-                                            <span>
-                                                <?php
-                                                if (isset($wo['lang']['content']) && isset($wo['lang']['monetization'])) {
-                                                    echo $wo['lang']['monetization'] . ' từ ' . strtolower($wo['lang']['content']);
-                                                } else {
-                                                    echo $admin_sidebar_default["posts"];
-                                                }
-                                                ?>
-                                            </span>
-                                        </a>
+                                        <a <?php echo ($page == 'manage-events') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-content-monetization'); ?>" data-ajax="?path=manage-content-monetization">Content Monetization</a>
                                     </li>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Quản lý tính năng - Quản lý cửa hàng -->
+
+
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['store-settings'] == 1 || $wo['user']['permission']['manage-products'] == 1 || $wo['user']['permission']['manage-orders'] == 1 || $wo['user']['permission']['manage-reviews'] == 1))) { ?>
                                         <li <?php echo ($page == 'store-settings' || $page == 'manage-products' || $page == 'manage-orders' || $page == 'manage-reviews') ? 'class="open"' : ''; ?>>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Store -->
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['store'])) {
-                                                        echo $wo['lang']['store'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["store"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
+                                            <a href="javascript:void(0);">Store</a>
                                             <ul class="ml-menu">
-                                                <!-- Cài đặt cửa hàng -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['store-settings'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'store-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('store-settings'); ?>" data-ajax="?path=store-settings">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['store_settings'])) {
-                                                                    echo $wo['lang']['store_settings'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["store_settings"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Store Settings</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Quản lý sản phẩm - Manage Products -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-products'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-products') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-products'); ?>" data-ajax="?path=manage-products">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_product'])) {
-                                                                    echo $wo['lang']['manage_product'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_product"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Products</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Quản lý đơn hàng - Manage Orders -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-orders'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-orders') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-orders'); ?>" data-ajax="?path=manage-orders">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_orders'])) {
-                                                                    echo $wo['lang']['manage_orders'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_orders"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Orders</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Quản lý đánh giá -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-reviews'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-reviews') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-reviews'); ?>" data-ajax="?path=manage-reviews">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_review'])) {
-                                                                    echo $wo['lang']['manage_review'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_review"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Reviews</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
                                             </ul>
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Quản lý diễn đàn-->
+
+
+
+
+
+
+
+
+
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-forum-sections'] == 1 || $wo['user']['permission']['manage-forum-forums'] == 1 || $wo['user']['permission']['manage-forum-threads'] == 1 || $wo['user']['permission']['manage-forum-messages'] == 1 || $wo['user']['permission']['create-new-forum'] == 1 || $wo['user']['permission']['create-new-section'] == 1))) { ?>
                                         <li <?php echo ($page == 'manage-forum-sections' || $page == 'manage-forum-forums' || $page == 'manage-forum-threads' || $page == 'manage-forum-messages' || $page == 'create-new-forum' || $page == 'create-new-section') ? 'class="open"' : ''; ?>>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Quản lý diễn đàn -->
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['forums'])) {
-                                                        echo $wo['lang']['forums'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["forums"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a href="javascript:void(0);">Forums</a>
                                             <ul class="ml-menu">
-                                                <!-- Quản lý phần diễn đàn - Manage Forums Sections -->
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-forum-sections'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-forum-sections') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-forum-sections'); ?>" data-ajax="?path=manage-forum-sections">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_forum_sec'])) {
-                                                                    echo $wo['lang']['manage_forum_sec'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_forum_sec"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Forums Sections</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Quản lý diễn đàn - Manage Forums  -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-forum-forums'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-forum-forums') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-forum-forums'); ?>" data-ajax="?path=manage-forum-forums">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_forums'])) {
-                                                                    echo $wo['lang']['manage_forums'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_forums"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Forums</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Manage Threads - Quản lý chủ đề -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-forum-threads'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-forum-threads') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-forum-threads'); ?>" data-ajax="?path=manage-forum-threads">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_threads'])) {
-                                                                    echo $wo['lang']['manage_threads'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_threads"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Threads</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Manage Replies - Quản lý trả lời -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-forum-messages'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-forum-messages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-forum-messages'); ?>" data-ajax="?path=manage-forum-messages">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['replies'])) {
-                                                                    echo "Quản lý " . $wo['lang']['replies'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_threads"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Replies</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Tạo phần mới - Create New Section-->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['create-new-section'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'create-new-section') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('create-new-section'); ?>" data-ajax="?path=create-new-section">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['create_new_seciton'])) {
-                                                                    echo $wo['lang']['create_new_seciton'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["create_new_seciton"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Create New Section</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Tạo mới diễn đàn - create new forum -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['create-new-forum'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'create-new-forum') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('create-new-forum'); ?>" data-ajax="?path=create-new-forum">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['create_new_forum'])) {
-                                                                    echo $wo['lang']['create_new_forum'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["create_new_forum"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Create New Forum</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-
                                             </ul>
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Phim -->
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-movies'] == 1 || $wo['user']['permission']['add-new-movies'] == 1))) { ?>
                                         <li <?php echo ($page == 'manage-movies' || $page == 'add-new-movies') ? 'class="open"' : ''; ?>>
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['movies'])) {
-                                                        echo $wo['lang']['movies'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["movies"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
+                                            <a href="javascript:void(0);">Movies</a>
                                             <ul class="ml-menu">
-                                                <!-- Quản lý phim -->
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-movies'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-movies') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-movies'); ?>" data-ajax="?path=manage-movies">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['manage_movies'])) {
-                                                                    echo $wo['lang']['manage_movies'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_movies"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Movies</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['add-new-movies'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'add-new-movies') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-new-movies'); ?>" data-ajax="?path=add-new-movies">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['add_new_movies'])) {
-                                                                    echo $wo['lang']['add_new_movies'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["add_new_movies"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Add New Movie</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Trò chơi -->
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-games'] == 1 || $wo['user']['permission']['add-new-game'] == 1))) { ?>
+
                                         <li <?php echo ($page == 'manage-games' || $page == 'add-new-game') ? 'class="open"' : ''; ?>>
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['games'])) {
-                                                        echo $wo['lang']['games'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["games"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Quản lý trò chơi - Manager games -->
+                                            <a href="javascript:void(0);">Games</a>
                                             <ul class="ml-menu">
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-games'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'manage-games') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-games'); ?>" data-ajax="?path=manage-games">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['games'])) {
-                                                                    echo "Quản lý " . $wo['lang']['games'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["manage_game"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Manage Games</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Tạo trò chơi mới - Create new game -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['add-new-game'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'add-new-game') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-new-game'); ?>" data-ajax="?path=add-new-game">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['create_new_game'])) {
-                                                                    echo "Quản lý " . $wo['lang']['create_new_game'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["create_new_game"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Add New Game</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-
                                             </ul>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Categories - Quản lý danh mục -->
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['pages-categories'] == 1 || $wo['user']['permission']['pages-sub-categories'] == 1 || $wo['user']['permission']['groups-sub-categories'] == 1 || $wo['user']['permission']['products-sub-categories'] == 1 || $wo['user']['permission']['groups-categories'] == 1 || $wo['user']['permission']['blogs-categories'] == 1 || $wo['user']['permission']['products-categories'] == 1))) { ?>
                                         <li <?php echo ($page == 'pages-categories' || $page == 'pages-sub-categories' || $page == 'groups-sub-categories' || $page == 'products-sub-categories' || $page == 'groups-categories' || $page == 'blogs-categories' || $page == 'products-categories') ? 'class="open"' : ''; ?>>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Categories - Quản lý danh mục -->
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['categories'])) {
-                                                        echo $wo['lang']['categories'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["categories"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Sub categories - -->
+                                            <a href="javascript:void(0);">Categories</a>
                                             <ul class="ml-menu">
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Page caegories - Hạng mục trang -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pages-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'pages-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pages-categories'); ?>" data-ajax="?path=pages-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['categories']) && isset($wo['lang']['pages'])) {
-                                                                    echo $wo['lang']['categories'] . ' ' . strtolower($wo['lang']['pages']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["page_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Pages Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Pages Sub Categories - Hạng mục trang -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pages-sub-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'pages-sub-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pages-sub-categories'); ?>" data-ajax="?path=pages-sub-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['sub_category']) && isset($wo['lang']['pages'])) {
-                                                                    echo $wo['lang']['sub_category'] . ' ' . strtolower($wo['lang']['pages']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["page_sub_cate"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Pages Sub Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Groups Categories - Hạng mục trang -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['groups-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'groups-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('groups-categories'); ?>" data-ajax="?path=groups-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['groups']) && isset($wo['lang']['categories'])) {
-                                                                    echo $wo['lang']['groups'] . ' ' . strtolower($wo['lang']['categories']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["groups_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Groups Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Groups Sub Categories - Hạng mục trang -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['groups-sub-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'groups-sub-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('groups-sub-categories'); ?>" data-ajax="?path=groups-sub-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['groups']) && isset($wo['lang']['sub_category'])) {
-                                                                    echo $wo['lang']['groups'] . ' ' . strtolower($wo['lang']['sub_category']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["grp_sub_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Groups Sub Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Blogs Categories - Hạng mục blog -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['blogs-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'blogs-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('blogs-categories'); ?>" data-ajax="?path=blogs-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['categories']) && isset($wo['lang']['blog'])) {
-                                                                    echo $wo['lang']['categories'] . ' ' . strtolower($wo['lang']['blog']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["blogs_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Blogs Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Products Categories - Hạng mục blog -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['products-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'products-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('products-categories'); ?>" data-ajax="?path=products-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['categories']) && isset($wo['lang']['products'])) {
-                                                                    echo $wo['lang']['categories'] . ' ' . strtolower($wo['lang']['products']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["products_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Products Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Products Sub Categories - Hạng mục blog -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['products-sub-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'products-sub-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('products-sub-categories'); ?>" data-ajax="?path=products-sub-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['sub_categories']) && isset($wo['lang']['products'])) {
-                                                                    echo $wo['lang']['sub_categories'] . ' ' . strtolower($wo['lang']['products']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["prd_sub_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Products Sub Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!-- Job Categories -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['job-categories'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'job-categories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('job-categories'); ?>" data-ajax="?path=job-categories">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['categories']) && isset($wo['lang']['jobs'])) {
-                                                                    echo $wo['lang']['categories'] . ' ' . strtolower($wo['lang']['jobs']);
-                                                                } else {
-                                                                    echo $admin_sidebar_default["job_categories"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Job Categories</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
                                         </li>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Gift - Qùa tặng -->
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['add-new-gift'] == 1 || $wo['user']['permission']['manage-gifts'] == 1))) { ?>
                                         <?php if ($wo['config']['gift_system'] == 1) { ?>
                                             <li <?php echo ($page == 'manage-gifts' || $page == 'add-new-gift') ? 'class="open"' : ''; ?>>
-                                                <a href="javascript:void(0);">
-                                                    <span>
-                                                        <?php
-                                                        if (isset($wo['lang']['gifts'])) {
-                                                            echo $wo['lang']['gifts'];
-                                                        } else {
-                                                            echo $admin_sidebar_default["gifts"];
-                                                        }
-                                                        ?>
-                                                    </span>
-                                                </a>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Sub Gift - Qùa tặng -->
+                                                <a href="javascript:void(0);">Gifts</a>
                                                 <ul class="ml-menu">
-                                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                    <!-- Manage Gifts - Quản lý quà tặng -->
                                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-gifts'] == 1)) { ?>
                                                         <li>
                                                             <a <?php echo ($page == 'manage-gifts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-gifts'); ?>" data-ajax="?path=manage-gifts">
-                                                                <span>
-                                                                    <?php
-                                                                    if (isset($wo['lang']['manage_gifts'])) {
-                                                                        echo $wo['lang']['manage_gifts'];
-                                                                    } else {
-                                                                        echo $admin_sidebar_default["manage_gifts"];
-                                                                    }
-                                                                    ?>
-                                                                </span>
+                                                                <span>Manage Gifts</span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
-                                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                    <!-- Add New Gift - Thêm mới quà tặng -->
                                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['add-new-gift'] == 1)) { ?>
                                                         <li>
                                                             <a <?php echo ($page == 'add-new-gift') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-new-gift'); ?>" data-ajax="?path=add-new-gift">
-                                                                <span>
-                                                                    <?php
-                                                                    if (isset($wo['lang']['add_new_gifts'])) {
-                                                                        echo $wo['lang']['add_new_gifts'];
-                                                                    } else {
-                                                                        echo $admin_sidebar_default["add_new_gifts"];
-                                                                    }
-                                                                    ?>
-                                                                </span>
+                                                                <span>Add New Gift</span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
                                                 </ul>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
                                             </li>
                                         <?php } ?>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Gift - Qùa tặng -->
+
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-stickers'] == 1 || $wo['user']['permission']['add-new-sticker'] == 1))) { ?>
                                         <?php if ($wo['config']['stickers_system'] == 1) { ?>
                                             <li <?php echo ($page == 'manage-stickers' || $page == 'add-new-sticker') ? 'class="open"' : ''; ?>>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Sticker - Hình dán -->
-                                                <a href="javascript:void(0);">
-                                                    <span>
-                                                        <?php
-                                                        if (isset($wo['lang']['stickers'])) {
-                                                            echo $wo['lang']['stickers'];
-                                                        } else {
-                                                            echo $admin_sidebar_default["stickers"];
-                                                        }
-                                                        ?>
-                                                    </span>
-                                                </a>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
+                                                <a href="javascript:void(0);">Stickers</a>
                                                 <ul class="ml-menu">
-                                                    <!-- Manage Sticker - Quản lý Hình dán -->
                                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-stickers'] == 1)) { ?>
                                                         <li>
                                                             <a <?php echo ($page == 'manage-stickers') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-stickers'); ?>" data-ajax="?path=manage-stickers">
-                                                                <span>
-                                                                    <?php
-                                                                    if (isset($wo['lang']['manage_sticker'])) {
-                                                                        echo $wo['lang']['manage_sticker'];
-                                                                    } else {
-                                                                        echo $admin_sidebar_default["manage_sticker"];
-                                                                    }
-                                                                    ?>
-                                                                </span>
+                                                                <span>Manage Stickers</span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
-                                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                    <!-- Add New sticker -->
                                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['add-new-sticker'] == 1)) { ?>
                                                         <li>
                                                             <a <?php echo ($page == 'add-new-sticker') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-new-sticker'); ?>" data-ajax="?path=add-new-sticker">
-                                                                <span>
-                                                                    <?php
-                                                                    if (isset($wo['lang']['add_new_sticker'])) {
-                                                                        echo $wo['lang']['add_new_sticker'];
-                                                                    } else {
-                                                                        echo $admin_sidebar_default["add_new_sticker"];
-                                                                    }
-                                                                    ?>
-                                                                </span>
+                                                                <span>Add New sticker</span>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
@@ -1575,89 +991,33 @@ include('includes/admin_autoload/f_data.php');
                                             </li>
                                         <?php } ?>
                                     <?php } ?>
-                                    <!--------------------------------------------------------------------------------------------------------------------------------->
-                                    <!-- Gift - Qùa tặng -->
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['pages-fields'] == 1 || $wo['user']['permission']['groups-fields'] == 1 || $wo['user']['permission']['products-fields'] == 1 || $wo['user']['permission']['manage-profile-fields'] == 1))) { ?>
                                         <li <?php echo ($page == 'pages-fields' || $page == 'groups-fields' || $page == 'products-fields' || $page == 'manage-profile-fields') ? 'class="open"' : ''; ?>>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
-                                            <!-- Custom Fields - Trường tùy chỉnh -->
-                                            <a href="javascript:void(0);">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['custom_fields'])) {
-                                                        echo $wo['lang']['custom_fields'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["custom_fields"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!--------------------------------------------------------------------------------------------------------------------------------->
+                                            <a href="javascript:void(0);">Custom Fields</a>
                                             <ul class="ml-menu">
-                                                <!-- Custom Users Fields - Trường tùy chỉnh người dùng -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-profile-fields'] == 1)) { ?>
                                                     <li>
-                                                        <a <?php echo ($page == 'manage-profile-fields') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-profile-fields'); ?>" data-ajax="?path=manage-profile-fields">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['custom_user_fields'])) {
-                                                                    echo $wo['lang']['custom_user_fields'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["custom_user_fields"];
-                                                                }
-                                                                ?>
-                                                            </span>
-                                                        </a>
+                                                        <a <?php echo ($page == 'manage-profile-fields') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-profile-fields'); ?>" data-ajax="?path=manage-profile-fields">Custom Users Fields</a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Custom page Fields - Trường tùy chỉnh trang -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pages-fields'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'pages-fields') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pages-fields'); ?>" data-ajax="?path=pages-fields">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['custom_pages_fields'])) {
-                                                                    echo $wo['lang']['custom_pages_fields'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["custom_pages_fields"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Custom Pages Fields</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Custom Groups Fields - Trường tùy chỉnh nhóm -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['groups-fields'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'groups-fields') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('groups-fields'); ?>" data-ajax="?path=groups-fields">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['custom_group_fields'])) {
-                                                                    echo $wo['lang']['custom_group_fields'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["custom_group_fields"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Custom Groups Fields</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!--------------------------------------------------------------------------------------------------------------------------------->
-                                                <!-- Custom Product Fields - Trường tùy chỉnh nhóm -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['products-fields'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'products-fields') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('products-fields'); ?>" data-ajax="?path=products-fields">
-                                                            <span>
-                                                                <?php
-                                                                    if (isset($wo['lang']['custom_product_fields'])) {
-                                                                        echo $wo['lang']['custom_product_fields'];
-                                                                    } else {
-                                                                        echo $admin_sidebar_default["custom_product_fields"];
-                                                                    }
-                                                                ?>
-                                                            </span>
+                                                            <span>Custom Products Fields</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
@@ -1665,358 +1025,133 @@ include('includes/admin_autoload/f_data.php');
                                         </li>
                                     <?php } ?>
                                 </ul>
-                                <!-- ----------------------------------------------------------------------------------------------------------------------------------------- -->
                             </li>
                         <?php } ?>
-                        <!------------------------------------------------------------------------------------------------------->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-languages'] == 1 || $wo['user']['permission']['add-language'] == 1 || $wo['user']['permission']['edit-lang'] == 1))) { ?>
                             <li <?php echo ($page == 'manage-languages' || $page == 'add-language' || $page == 'edit-lang') ? 'class="open"' : ''; ?>>
-                                <!-- Quản lý ngôn ngữ -->
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">language</i>
                                     </span>
-                                    <span>
-                                        <?php
-                                        if (isset($wo['lang']['languages'])) {
-                                            echo $wo['lang']['languages'];
-                                        } else {
-                                            echo $admin_sidebar_default["languages"];
-                                        }
-                                        ?>
-                                    </span>
+                                    <span>Languages</span>
                                 </a>
-                                <!------------------------------------------------------------------------------------------------------->
                                 <ul <?php echo ($page == 'manage-languages' || $page == 'add-language' || $page == 'edit-lang') ? 'style="display: block;"' : ''; ?>>
-                                    <!-- Thêm mới ngôn ngữ và key - Add New Language & Keys -->                                    
-                                    <!------------------------------------------------------------------------------------------------------->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['add-language'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'add-language') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-language'); ?>" data-ajax="?path=add-language">                                                
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['add_lang_key'])) {
-                                                        echo $wo['lang']['add_lang_key'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["add_lang_key"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'add-language') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('add-language'); ?>" data-ajax="?path=add-language">Add New Language & Keys</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Quản lý ngôn ngữ - Manage Languages -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-languages'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-languages' || $page == 'edit-lang') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-languages'); ?>" data-ajax="?path=manage-languages">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['manage_languages'])) {
-                                                        echo $wo['lang']['manage_languages'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["manage_languages"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-languages' || $page == 'edit-lang') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-languages'); ?>" data-ajax="?path=manage-languages">Manage Languages</a>
                                         </li>
                                     <?php } ?>
                                 </ul>
-                                <!------------------------------------------------------------------------------------------------------->            
                             </li>
                         <?php } ?>
-                        <!------------------------------------------------------------------------------------------------------->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-users'] == 1 || $wo['user']['permission']['manage-stories'] == 1 || $wo['user']['permission']['manage-profile-fields'] == 1 || $wo['user']['permission']['add-new-profile-field'] == 1 || $wo['user']['permission']['manage-verification-reqeusts'] == 1 || $wo['user']['permission']['affiliates-settings'] == 1 || $wo['user']['permission']['payment-reqeuests'] == 1 || $wo['user']['permission']['referrals-list'] == 1 || $wo['user']['permission']['online-users'] == 1 || $wo['user']['permission']['manage-genders'] == 1))) { ?>
                             <li <?php echo ($page == 'manage-users' || $page == 'manage-stories' || $page == 'manage-profile-fields' || $page == 'add-new-profile-field' || $page == 'edit-profile-field' || $page == 'manage-verification-reqeusts' || $page == 'affiliates-settings' || $page == 'payment-reqeuests' || $page == 'referrals-list' || $page == 'online-users' || $page == 'manage-genders') ? 'class="open"' : ''; ?>>
-                                <!-- Người dùng -->
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">account_circle</i>
                                     </span>
-                                    <span>
-                                        <?php
-                                            if (isset($wo['lang']['users'])) {
-                                                echo $wo['lang']['users'];
-                                            } else {
-                                                echo $admin_sidebar_default["users"];
-                                            }
-                                        ?>
-                                    </span>
+                                    <span>Users</span>
                                 </a>
-                                <!------------------------------------------------------------------------------------------------------->
-                                <!-- Mục con của người dùng -->
-                                <!------------------------------------------------------------------------------------------------------->
                                 <ul class="ml-menu">
-                                    <!-- Quản lý người dùng - Manager Users -->
-                                    <!------------------------------------------------------------------------------------------------------->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-users'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-users'); ?>" data-ajax="?path=manage-users">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['manage_users'])) {
-                                                        echo $wo['lang']['manage_users'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["manage_users"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            
-                                            </a>
+                                            <a <?php echo ($page == 'manage-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-users'); ?>" data-ajax="?path=manage-users">Manage Users</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Người dùng trực tuyến - Online -->                                                    
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['online-users'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'online-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('online-users'); ?>" data-ajax="?path=online-users">                                                
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['online_users'])) {
-                                                        echo $wo['lang']['online_users'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["online_users"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'online-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('online-users'); ?>" data-ajax="?path=online-users">Online Users</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Manage User Stories / Status --  Quản lý câu chuyện người dùng / trạng thái -->                                                    
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-stories'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-stories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-stories'); ?>" data-ajax="?path=manage-stories">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['manage_store']) && isset($wo['lang']['users']) && isset($wo['lang']['status'])) {
-                                                        echo $wo['lang']['manage_store'] . ' ' . strtolower($wo['lang']['users']) . '/ ' . strtolower($wo['lang']['status']);
-                                                    } else {
-                                                        echo $admin_sidebar_default["m_store_users_status"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-stories') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-stories'); ?>" data-ajax="?path=manage-stories">Manage User Stories / Status</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Manage Verification Reqeusts -- Quản lý yêu cầu xác minh -->     
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-verification-reqeusts'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-verification-reqeusts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-verification-reqeusts'); ?>" data-ajax="?path=manage-verification-reqeusts">                                                
-                                            <span>
-                                                <?php
-                                                if (isset($wo['lang']['verifications_requests']) && isset($admin_sidebar_default["manage"])) {
-                                                    echo $admin_sidebar_default["manage"] . ' ' . strtolower($wo['lang']['verifications_requests']);
-                                                } else {
-                                                    echo $admin_sidebar_default["m_veri_request"];                                                
-                                                }
-                                                ?>
-                                            </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-verification-reqeusts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-verification-reqeusts'); ?>" data-ajax="?path=manage-verification-reqeusts">Manage Verification Requests</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Affiliates Settings - Cài đặt liên kết --> 
                                     <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['affiliates-settings'] == 1 || $wo['user']['permission']['payment-reqeuests'] == 1 || $wo['user']['permission']['referrals-list'] == 1))) { ?>
+
                                         <li>
-                                            <!-- Affiliates System -->
-                                            <a <?php echo ($page == 'affiliates-settings' || $page == 'payment-reqeuests' || $page == 'referrals-list') ? 'class="active"' : ''; ?> href="javascript:void(0);">    
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['affiliate_settings'])) {
-                                                        echo $wo['lang']['affiliate_settings'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["affiliate_settings"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
-                                            <!------------------------------------------------------------------------------------------------------->
+                                            <a <?php echo ($page == 'affiliates-settings' || $page == 'payment-reqeuests' || $page == 'referrals-list') ? 'class="active"' : ''; ?> href="javascript:void(0);">Affiliates System</a>
                                             <ul class="ml-menu">
-                                                <!-- Affiliates Settings -->
-                                                <!------------------------------------------------------------------------------------------------------->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['affiliates-settings'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'affiliates-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('affiliates-settings'); ?>" data-ajax="?path=affiliates-settings">
-                                                        <span>
-                                                            <?php
-                                                            if (isset($wo['lang']['affiliate_settings'])) {
-                                                                echo $wo['lang']['affiliate_settings'];
-                                                            } else {
-                                                                echo $admin_sidebar_default["affiliate_settings"];
-                                                            }
-                                                            ?>
-                                                        </span>
+                                                            <span>Affiliates Settings</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
-                                                <!------------------------------------------------------------------------------------------------------->
-                                                <!-- Payment Requests  -- Yêu cầu thanh toán -->
                                                 <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['payment-reqeuests'] == 1)) { ?>
                                                     <li>
                                                         <a <?php echo ($page == 'payment-reqeuests') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('payment-reqeuests'); ?>" data-ajax="?path=payment-reqeuests">
-                                                            <span>
-                                                                <?php
-                                                                if (isset($wo['lang']['requests']) && isset($wo['lang']['payment'])) {
-                                                                    echo $wo['lang']['requests'] . ' ' . $wo['lang']['requests'];
-                                                                } else {
-                                                                    echo $admin_sidebar_default["payment_request"];
-                                                                }
-                                                                ?>
-                                                            </span>
+                                                            <span>Payment Requests</span>
                                                         </a>
                                                     </li>
                                                 <?php } ?>
                                             </ul>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->
-                                    <!-- Manage Genders - Quản lý giới tính -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-genders'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-genders') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-genders'); ?>" data-ajax="?path=manage-genders">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['gender'])) {
-                                                        echo $admin_sidebar_default["manage"] . ' ' . $wo['lang']['gender'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["manage_genders"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-genders') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-genders'); ?>" data-ajax="?path=manage-genders">Manage Genders</a>
                                         </li>
                                     <?php } ?>
                                 </ul>
-                                <!------------------------------------------------------------------------------------------------------->
                             </li>
                         <?php } ?>
-                        <!------------------------------------------------------------------------------------------------------->                        
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['ads-settings'] == 1 || $wo['user']['permission']['manage-site-ads'] == 1 || $wo['user']['permission']['manage-user-ads'] == 1 || $wo['user']['permission']['bank-receipts'] == 1 || $wo['user']['permission']['payment-settings'] == 1 || $wo['user']['permission']['manage-currencies'] == 1))) { ?>
                             <li <?php echo ($page == 'ads-settings' || $page == 'manage-site-ads' || $page == 'manage-user-ads' || $page == 'bank-receipts' || $page == 'payment-settings' || $page == 'manage-currencies') ? 'class="open"' : ''; ?>>
-                                <!-- Payments & Ads   --  Thanh toán và quảng cáo -->
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">attach_money</i>
                                     </span>
-                                    <span>
-                                        <?php
-                                        if (isset($wo['lang']['payments']) && isset($wo['lang']['ads'])) {
-                                            echo $wo['lang']['payments'] . ' và ' . strtolower($wo['lang']['ads']);
-                                        } else {
-                                            echo $admin_sidebar_default["payments_ads"];
-                                        }
-                                        ?>
-                                    </span>                                    
+                                    <span>Payments & Ads</span>
                                 </a>
                                 <ul class="ml-menu">
-                                    <!-- Payment Configuration -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['payment-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'payment-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('payment-settings'); ?>" data-ajax="?path=payment-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['config']) && isset($wo['lang']['payments'])) {
-                                                        echo $wo['lang']['config'] . ' ' . strtolower($wo['lang']['payments']);
-                                                    } else {
-                                                        echo $admin_sidebar_default["payment_configuration"];
-                                                    }
-                                                    ?>
-                                                </span>     
-                                            </a>
+                                            <a <?php echo ($page == 'payment-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('payment-settings'); ?>" data-ajax="?path=payment-settings">Payment Configuration</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->                        
-                                    <!-- Cài đặt quảng cáo - Advertisement Settings  -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['ads-settings'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'ads-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ads-settings'); ?>" data-ajax="?path=ads-settings">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['advertisement_setting'])) {
-                                                        echo $wo['lang']['advertisement_setting'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["advertisement_setting"];
-                                                    }
-                                                    ?>
-                                                </span>                                            
-                                            </a>
+                                            <a <?php echo ($page == 'ads-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ads-settings'); ?>" data-ajax="?path=ads-settings">Advertisement Settings </a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->                        
-                                    <!-- Manage Currencies  - Quản lý tiền tệ-->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-currencies'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-currencies') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-currencies'); ?>" data-ajax="?path=manage-currencies">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['manage']) && isset($wo['lang']['currency'])) {
-                                                        echo $wo['lang']['manage'] . ' ' . strtolower($wo['lang']['currency']);
-                                                    } else {
-                                                        echo $admin_sidebar_default["manage_currency"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-currencies') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-currencies'); ?>" data-ajax="?path=manage-currencies">Manage Currencies</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->                        
-                                    <!-- Manage Site Advertisements --  Quản lý quảng cáo trang web -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-site-ads'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-site-ads') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-site-ads'); ?>" data-ajax="?path=manage-site-ads">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['m_site_ads'])) {
-                                                        echo $wo['lang']['m_site_ads'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["m_site_ads"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-site-ads') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-site-ads'); ?>" data-ajax="?path=manage-site-ads">Manage Site Advertisements</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->                        
-                                    <!-- Manage User Advertisements --  Quản lý quảng cáo người dùng -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-user-ads'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-user-ads') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-user-ads'); ?>" data-ajax="?path=manage-user-ads">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['m_user_ads'])) {
-                                                        echo $wo['lang']['m_user_ads'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["m_user_ads"];
-                                                    }
-                                                    ?>
-                                                </span>
-                                            </a>
+                                            <a <?php echo ($page == 'manage-user-ads') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-user-ads'); ?>" data-ajax="?path=manage-user-ads">Manage User Advertisements</a>
                                         </li>
                                     <?php } ?>
-                                    <!------------------------------------------------------------------------------------------------------->                        
-                                    <!-- Manage Bank Receipts - Quản lý Biên lai ngân hàng -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['bank-receipts'] == 1)) { ?>
                                         <li>
                                             <a <?php echo ($page == 'bank-receipts') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('bank-receipts'); ?>" data-ajax="?path=bank-receipts">
-                                                <span>
-                                                    <?php
-                                                    if (isset($wo['lang']['m_bank_receipts'])) {
-                                                        echo $wo['lang']['m_bank_receipts'];
-                                                    } else {
-                                                        echo $admin_sidebar_default["m_bank_receipts"];
-                                                    }
-                                                    ?>
-                                                </span>
+                                                <span>Manage Bank Receipts</span>
                                             </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
                             </li>
                         <?php } ?>
-                        <!------------------------------------------------------------------------------------------------------->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['pro-settings'] == 1 || $wo['user']['permission']['pro-memebers'] == 1 || $wo['user']['permission']['pro-payments'] == 1 || $wo['user']['permission']['pro-features'] == 1 || $wo['user']['permission']['pro-refund'] == 1))) { ?>
                             <li <?php echo ($page == 'pro-settings' || $page == 'pro-memebers' || $page == 'pro-payments' || $page == 'pro-features' || $page == 'pro-refund') ? 'class="open"' : ''; ?>>
                                 <a href="#">
@@ -2280,14 +1415,13 @@ include('includes/admin_autoload/f_data.php');
                                 </a>
                             </li>
                         <?php } ?>
-                        <a class="pow_link" href="https://bit.ly/2R2jrcz" target="_blank">
+                        <a class="pow_link" href="/" target="_blank">
                             <p>Powered by</p>
-                            <img src="https://demo.wowonder.com/themes/default/img/logo.png">
+                            <img src= <?php echo env("APP_URL")  . "/themes/wowonder/img/logo.png" ?> >
                             <b class="badge">v<?php echo $wo['config']['version']; ?></b>
                         </a>
                     </ul>
                 </div>
-                <!-- ------------------------------------------------------------------------------------------------------------------- -->
             </div>
             <!-- end::navigation -->
 

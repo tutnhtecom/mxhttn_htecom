@@ -9,6 +9,8 @@
     $sql_db_pass = env("DB_PASS") ?? 'password';
     // MySQL Database Name
     $sql_db_name = env("DB_NAME") ?? 'mang_xa_hoi_db';
+    //DB_PORT
+    $sql_port    = env("DB_PORT") ?? 3306;
     // Site URL
     $site_url = env("APP_URL") ?? 'http://localhost:8081';
     

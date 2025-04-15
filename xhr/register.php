@@ -104,6 +104,15 @@ if ($f == 'register') {
                 $birthday = $_POST['birthday'];
             }
         }
+        if (Wo_PhoneExists($_POST['phone_number']) === true) {
+            $errors = $error_icon . $wo['lang']['phone_exists'];
+        }
+
+        if(empty($_POST['phone_number'])){
+            $errors = $error_icon . $wo['lang']['empty_phone_number'];
+        } else {
+            $phone_number = $_POST['phone_number'];
+        }
 
         if (!empty($fields) && count($fields) > 0) {
             foreach ($fields as $key => $field) {
@@ -142,7 +151,8 @@ if ($f == 'register') {
             'gender' => '',
             'lastseen' => time(),
             'active' => Wo_Secure($activate),
-            'birthday' => $birthday
+            'birthday' => $birthday,
+            'phone_number' => Wo_Secure($phone_number)
         );
         if ($wo['config']['disable_start_up'] == '1') {
             $re_data['start_up'] = '1';
@@ -186,7 +196,7 @@ if ($f == 'register') {
         }
         if (!empty($_POST['phone_num'])) {
             $re_data['phone_number'] = Wo_Secure($_POST['phone_num']);
-        }
+        } 
         $in_code = (isset($_POST['invited'])) ? Wo_Secure($_POST['invited']) : false;
         if (empty($_POST['phone_num'])) {
             $register = Wo_RegisterUser($re_data, $in_code);

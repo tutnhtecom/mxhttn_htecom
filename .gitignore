@@ -1,5 +1,7 @@
+/themes/sunshine/img
 /assets/libraries
 /upload/photos
 .env
 config.php
 /_install
+/cache/sidebar-1.tpl

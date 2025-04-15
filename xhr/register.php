@@ -25,7 +25,8 @@ if ($f == 'register') {
         }
     }
     $fields = Wo_GetWelcomeFileds();
-    if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['confirm_password']) || empty($_POST['gender'])) {
+    // if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['confirm_password']) || empty($_POST['gender'])) {
+    if (empty($_POST['email']) || empty($_POST['username']) || empty($_POST['password']) || empty($_POST['confirm_password']) || empty($_POST['birthday'])) {
         $errors = $error_icon . $wo['lang']['please_check_details'];
     } else {
         $is_exist = Wo_IsNameExist($_POST['username'], 0);
@@ -85,10 +86,25 @@ if ($f == 'register') {
                 $errors = $error_icon . $wo['lang']['reCaptcha_error'];
             }
         }
-        $gender = 'male';
-        if (in_array($_POST['gender'], array_keys($wo['genders']))) {
-            $gender = $_POST['gender'];
+        // $gender = 'male';
+        // if (in_array($_POST['gender'], array_keys($wo['genders']))) {
+        //     $gender = $_POST['gender'];
+        // }
+        if (isset($_POST['birthday'])) {
+            $birthday = $_POST['birthday']; // ví dụ: "2006-01-01"
+            $birthdayDate = new DateTime($birthday);
+            $today = new DateTime();
+        
+            // Tính tuổi
+            $age = $today->diff($birthdayDate)->y;
+        
+            if ($age < 18) {
+                $errors = $error_icon . $wo['lang']['age_not_register'];
+            } else {
+                $birthday = $_POST['birthday'];
+            }
         }
+
         if (!empty($fields) && count($fields) > 0) {
             foreach ($fields as $key => $field) {
                 if (empty($_POST[$field['fid']])) {
@@ -122,10 +138,11 @@ if ($f == 'register') {
             'password' => $_POST['password'],
             'email_code' => Wo_Secure($code, 0),
             'src' => 'site',
-            'gender' => Wo_Secure($gender),
+            // 'gender' => Wo_Secure($gender),
+            'gender' => '',
             'lastseen' => time(),
             'active' => Wo_Secure($activate),
-            'birthday' => '0000-00-00'
+            'birthday' => $birthday
         );
         if ($wo['config']['disable_start_up'] == '1') {
             $re_data['start_up'] = '1';

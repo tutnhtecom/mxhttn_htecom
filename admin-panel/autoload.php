@@ -2019,131 +2019,388 @@ include('includes/admin_autoload/f_data.php');
                         <!------------------------------------------------------------------------------------------------------->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['pro-settings'] == 1 || $wo['user']['permission']['pro-memebers'] == 1 || $wo['user']['permission']['pro-payments'] == 1 || $wo['user']['permission']['pro-features'] == 1 || $wo['user']['permission']['pro-refund'] == 1))) { ?>
                             <li <?php echo ($page == 'pro-settings' || $page == 'pro-memebers' || $page == 'pro-payments' || $page == 'pro-features' || $page == 'pro-refund') ? 'class="open"' : ''; ?>>
+                                <!-- Pro System -->
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">stars</i>
                                     </span>
-                                    <span>Pro System</span>
+                                    <span>
+                                        <?php
+                                        if (isset($wo['lang']['pro_system'])) {
+                                            echo $wo['lang']['pro_system'];
+                                        } else {
+                                            echo $admin_sidebar_default["pro_system"];
+                                        }
+                                        ?>
+                                    </span>
                                 </a>
+                                <!------------------------------------------------------------------------------------------------------->
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pro-settings'] == 1)) { ?>
+                                        <!-- Pro System Settings - Cài đặt hệ thống Pro -->
                                         <li>
-                                            <a <?php echo ($page == 'pro-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-settings'); ?>" data-ajax="?path=pro-settings">Pro System Settings</a>
+                                            <a <?php echo ($page == 'pro-settings') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-settings'); ?>" data-ajax="?path=pro-settings">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['pro_system_setup'])) {
+                                                        echo $wo['lang']['pro_system_setup'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["pro_system_setup"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Manage Payments -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pro-payments'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'pro-payments') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-payments'); ?>" data-ajax="?path=pro-payments">Manage Payments</a>
+                                            <a <?php echo ($page == 'pro-payments') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-payments'); ?>" data-ajax="?path=pro-payments">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['manage_payment'])) {
+                                                        echo $wo['lang']['manage_payment'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["manage_payment"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Manage Members -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pro-memebers'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'pro-memebers') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-memebers'); ?>" data-ajax="?path=pro-memebers">Manage Members</a>
+                                            <a <?php echo ($page == 'pro-memebers') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-memebers'); ?>" data-ajax="?path=pro-memebers">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['manage_member'])) {
+                                                        echo $wo['lang']['manage_member'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["manage_member"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Manage Refund Requests - Quản lý yêu cầu hoàn tiền -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['pro-refund'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'pro-refund') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-refund'); ?>" data-ajax="?path=pro-refund">Manage Refund Requests</a>
+                                            <a <?php echo ($page == 'pro-refund') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('pro-refund'); ?>" data-ajax="?path=pro-refund">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['manage_refund_requests'])) {
+                                                        echo $wo['lang']['manage_refund_requests'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["manage_refund_requests"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
                                 </ul>
                             </li>
                         <?php } ?>
-
+                        <!------------------------------------------------------------------------------------------------------->
+                        <!-- Design - Thiết kế -->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-themes'] == 1 || $wo['user']['permission']['manage-site-design'] == 1 || $wo['user']['permission']['custom-code'] == 1))) { ?>
                             <li <?php echo ($page == 'manage-themes' || $page == 'manage-site-design' || $page == 'custom-code') ? 'class="open"' : ''; ?>>
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">color_lens</i>
                                     </span>
-                                    <span>Design</span>
+                                    <span>
+                                        <?php
+                                        if (isset($wo['lang']['design'])) {
+                                            echo $wo['lang']['design'];
+                                        } else {
+                                            echo $admin_sidebar_default["design"];
+                                        }
+                                        ?>
+                                    </span>
                                 </a>
+                                <!------------------------------------------------------------------------------------------------------->
+                                <!-- Themes - Chủ đề -->
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-themes'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-themes') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-themes'); ?>" data-ajax="?path=manage-themes">Themes</a>
+                                            <a <?php echo ($page == 'manage-themes') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-themes'); ?>" data-ajax="?path=manage-themes">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['themes'])) {
+                                                        echo $wo['lang']['themes'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["themes"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Change Site Design - Thay đổi thiết kế trang web -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-site-design'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-site-design') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-site-design'); ?>" data-ajax="?path=manage-site-design">Change Site Design</a>
+                                            <a <?php echo ($page == 'manage-site-design') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-site-design'); ?>" data-ajax="?path=manage-site-design">                                                
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['change_site_design'])) {
+                                                        echo $wo['lang']['change_site_design'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["change_site_design"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Custom JS / CSS - Tùy chỉnh JS/ CSS -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['custom-code'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'custom-code') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('custom-code'); ?>" data-ajax="?path=custom-code">Custom JS / CSS</a>
+                                            <a <?php echo ($page == 'custom-code') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('custom-code'); ?>" data-ajax="?path=custom-code">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['custom_js_css'])) {
+                                                        echo $wo['lang']['custom_js_css'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["custom_js_css"];
+                                                    }
+                                                    ?>
+                                                </span>                                                
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
                             </li>
                         <?php } ?>
+                        <!------------------------------------------------------------------------------------------------------->
+                        <!-- Tools - Công cụ -->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['manage-announcements'] == 1 || $wo['user']['permission']['mass-notifications'] == 1 || $wo['user']['permission']['ban-users'] == 1 || $wo['user']['permission']['generate-sitemap'] == 1 || $wo['user']['permission']['manage-invitation-keys'] == 1 || $wo['user']['permission']['backups'] == 1 || $wo['user']['permission']['auto-delete'] == 1 || $wo['user']['permission']['auto-friend'] == 1 || $wo['user']['permission']['fake-users'] == 1 || $wo['user']['permission']['auto-like'] == 1 || $wo['user']['permission']['auto-join'] == 1 || $wo['user']['permission']['send_email'] == 1 || $wo['user']['permission']['manage-invitation'] == 1))) { ?>
                             <li <?php echo ($page == 'manage-announcements' || $page == 'mass-notifications' || $page == 'ban-users' || $page == 'generate-sitemap' || $page == 'manage-invitation-keys' || $page == 'backups' || $page == 'auto-delete' || $page == 'auto-friend' || $page == 'fake-users' || $page == 'auto-like' || $page == 'auto-join' || $page == 'send_email' || $page == 'manage-invitation') ? 'class="open"' : ''; ?>>
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">build</i>
                                     </span>
-                                    <span>Tools</span>
+                                    <span>
+                                        <?php
+                                        if (isset($wo['lang']['tools'])) {
+                                            echo $wo['lang']['tools'];
+                                        } else {
+                                            echo $admin_sidebar_default["tools"];
+                                        }
+                                        ?>
+                                    </span>
                                 </a>
+                                <!------------------------------------------------------------------------------------------------------->
                                 <ul class="ml-menu">
+                                    <!-- Manage Emails -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage_emails'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage_emails') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage_emails'); ?>" data-ajax="?path=manage_emails">Manage Emails</a>
+                                            <a <?php echo ($page == 'manage_emails') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage_emails'); ?>" data-ajax="?path=manage_emails">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['manage_email'])) {
+                                                        echo $wo['lang']['manage_email'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["manage_email"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Users Invitation -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-invitation'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-invitation') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-invitation'); ?>" data-ajax="?path=manage-invitation">Users Invitation</a>
+                                            <a <?php echo ($page == 'manage-invitation') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-invitation'); ?>" data-ajax="?path=manage-invitation">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['user_invitation'])) {
+                                                        echo $wo['lang']['user_invitation'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["user_invitation"];
+                                                    }
+                                                    ?>
+                                                </span>                                               
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Send email -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['send_email'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'send_email') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('send_email'); ?>" data-ajax="?path=send_email">Send E-mail</a>
+                                            <a <?php echo ($page == 'send_email') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('send_email'); ?>" data-ajax="?path=send_email">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['send_email'])) {
+                                                        echo $wo['lang']['send_email'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["send_email"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Announcements - Thông báo -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-announcements'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-announcements') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-announcements'); ?>" data-ajax="?path=manage-announcements">Announcements</a>
+                                            <a <?php echo ($page == 'manage-announcements') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-announcements'); ?>" data-ajax="?path=manage-announcements">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['announcements'])) {
+                                                    echo $wo['lang']['announcements'];
+                                                } else {
+                                                    echo $admin_sidebar_default["announcements"];
+                                                }
+                                                ?>
+                                            </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Auto Delete Data - Tự động xóa dữ liệu -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['auto-delete'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'auto-delete') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-delete'); ?>" data-ajax="?path=auto-delete">Auto Delete Data</a>
+                                            <a <?php echo ($page == 'auto-delete') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-delete'); ?>" data-ajax="?path=auto-delete">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['auto_delete_data'])) {
+                                                    echo $wo['lang']['auto_delete_data'];
+                                                } else {
+                                                    echo $admin_sidebar_default["auto_delete_data"];
+                                                }
+                                                ?>
+                                            </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Auto Friend - Tự động kết bạn -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['auto-friend'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'auto-friend') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-friend'); ?>" data-ajax="?path=auto-friend">Auto Friend</a>
+                                            <a <?php echo ($page == 'auto-friend') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-friend'); ?>" data-ajax="?path=auto-friend">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['auto_friend'])) {
+                                                    echo $wo['lang']['auto_friend'];
+                                                } else {
+                                                    echo $admin_sidebar_default["auto_friend"];
+                                                }
+                                                ?>
+                                            </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Auto Page Like - Tự động thích trang -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['auto-like'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'auto-like') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-like'); ?>" data-ajax="?path=auto-like">Auto Page Like</a>
+                                            <a <?php echo ($page == 'auto-like') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-like'); ?>" data-ajax="?path=auto-like">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['auto_page_like'])) {
+                                                    echo $wo['lang']['auto_page_like'];
+                                                } else {
+                                                    echo $admin_sidebar_default["auto_page_like"];
+                                                }
+                                                ?>
+                                            </span>                                            
+                                        </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                    <!-- Auto Group Join = Tự động tham gia vào nhóm -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['auto-join'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'auto-join') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-join'); ?>" data-ajax="?path=auto-join">Auto Group Join</a>
+                                            <a <?php echo ($page == 'auto-join') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('auto-join'); ?>" data-ajax="?path=auto-join">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['auto_group_join'])) {
+                                                    echo $wo['lang']['auto_group_join'];
+                                                } else {
+                                                    echo $admin_sidebar_default["auto_group_join"];
+                                                }
+                                                ?>
+                                            </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->
+                                     <!-- Fake User Generator  -- Trình tạo người dùng giả mạo -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['fake-users'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'fake-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('fake-users'); ?>" data-ajax="?path=fake-users">Fake User Generator</a>
+                                            <a <?php echo ($page == 'fake-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('fake-users'); ?>" data-ajax="?path=fake-users">
+                                            <span>
+                                                <?php
+                                                if (isset($wo['lang']['fake_user_generator'])) {
+                                                    echo $wo['lang']['fake_user_generator'];
+                                                } else {
+                                                    echo $admin_sidebar_default["fake_user_generator"];
+                                                }
+                                                ?>
+                                            </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!-------------------------------------------------------------------------------------------------------> 
+                                    <!-- Mass Notifications  --  Thông báo hàng loạt -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['mass-notifications'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'mass-notifications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('mass-notifications'); ?>" data-ajax="?path=mass-notifications">Mass Notifications</a>
+                                            <a <?php echo ($page == 'mass-notifications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('mass-notifications'); ?>" data-ajax="?path=mass-notifications">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['mass_notifications'])) {
+                                                        echo $wo['lang']['mass_notifications'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["mass_notifications"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!-------------------------------------------------------------------------------------------------------> 
+                                    <!-- Black List  --  Danh sách đen -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['ban-users'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'ban-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ban-users'); ?>" data-ajax="?path=ban-users">BlackList</a>
+                                            <a <?php echo ($page == 'ban-users') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('ban-users'); ?>" data-ajax="?path=ban-users">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['black_list'])) {
+                                                        echo $wo['lang']['black_list'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["black_list"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
+                                    <!------------------------------------------------------------------------------------------------------->                  
+                                    <!-- Generate SiteMap - Tạo sơ đồ trang web -->
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['generate-sitemap'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'generate-sitemap') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('generate-sitemap'); ?>" data-ajax="?path=generate-sitemap">Generate SiteMap</a>
+                                            <a <?php echo ($page == 'generate-sitemap') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('generate-sitemap'); ?>" data-ajax="?path=generate-sitemap">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['generate_site_map'])) {
+                                                        echo $wo['lang']['generate_site_map'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["generate_site_map"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-invitation-keys'] == 1)) { ?>
@@ -2159,6 +2416,8 @@ include('includes/admin_autoload/f_data.php');
                                 </ul>
                             </li>
                         <?php } ?>
+                        <!------------------------------------------------------------------------------------------------------->
+
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['edit-terms-pages'] == 1 || $wo['user']['permission']['manage_terms_pages'] == 1 || $wo['user']['permission']['manage-custom-pages'] == 1 || $wo['user']['permission']['add-new-custom-page'] == 1 || $wo['user']['permission']['edit-custom-page'] == 1))) { ?>
                             <li <?php echo ($page == 'edit-terms-pages' || $page == 'manage_terms_pages' || $page == 'manage-custom-pages' || $page == 'add-new-custom-page' || $page == 'edit-custom-page') ? 'class="open"' : ''; ?>>
                                 <a href="#">

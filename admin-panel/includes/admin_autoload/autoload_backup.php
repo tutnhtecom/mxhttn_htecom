@@ -1268,7 +1268,9 @@ if (!empty($_COOKIE['mode']) && $_COOKIE['mode'] == 'night') {
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['mass-notifications'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'mass-notifications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('mass-notifications'); ?>" data-ajax="?path=mass-notifications">Mass Notifications</a>
+                                            <a <?php echo ($page == 'mass-notifications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('mass-notifications'); ?>" data-ajax="?path=mass-notifications">
+                                                Mass Notifications
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['ban-users'] == 1)) { ?>

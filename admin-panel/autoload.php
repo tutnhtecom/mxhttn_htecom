@@ -2405,12 +2405,32 @@ include('includes/admin_autoload/f_data.php');
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-invitation-keys'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-invitation-keys') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-invitation-keys'); ?>" data-ajax="?path=manage-invitation-keys">Invitation Codes</a>
+                                            <a <?php echo ($page == 'manage-invitation-keys') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-invitation-keys'); ?>" data-ajax="?path=manage-invitation-keys">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['invitation_codes'])) {
+                                                        echo $wo['lang']['invitation_codes'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["invitation_codes"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['backups'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'backups') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('backups'); ?>" data-ajax="?path=backups">Backup SQL & Files</a>
+                                            <a <?php echo ($page == 'backups') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('backups'); ?>" data-ajax="?path=backups">
+                                                <span>
+                                                    <?php
+                                                    if (isset($wo['lang']['backup_sql_files'])) {
+                                                        echo $wo['lang']['backup_sql_files'];
+                                                    } else {
+                                                        echo $admin_sidebar_default["backup_sql_files"];
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -2424,17 +2444,45 @@ include('includes/admin_autoload/f_data.php');
                                     <span class="nav-link-icon">
                                         <i class="material-icons">description</i>
                                     </span>
-                                    <span>Pages</span>
+                                    <span>
+                                        <?php
+                                            if (isset($wo['lang']['pages'])) {
+                                                echo $wo['lang']['pages'];
+                                            } else {
+                                                echo $admin_sidebar_default["pages"];
+                                            }
+                                        ?> 
+                                    </span>
                                 </a>
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-custom-pages'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-custom-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-custom-pages'); ?>" data-ajax="?path=manage-custom-pages">Manage Custom Pages</a>
+                                            <a <?php echo ($page == 'manage-custom-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-custom-pages'); ?>" data-ajax="?path=manage-custom-pages">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['manage_custom_pages'])) {
+                                                            echo $wo['lang']['manage_custom_pages'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["manage_custom_pages"];
+                                                        }
+                                                    ?> 
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['edit-terms-pages'] == 1 && $wo['user']['permission']['manage_terms_pages'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage_terms_pages' || $page == 'edit-terms-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage_terms_pages'); ?>" data-ajax="?path=manage_terms_pages">Manage Terms Pages</a>
+                                            <a <?php echo ($page == 'manage_terms_pages' || $page == 'edit-terms-pages') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage_terms_pages'); ?>" data-ajax="?path=manage_terms_pages">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['manage_terms_pages'])) {
+                                                            echo $wo['lang']['manage_terms_pages'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["manage_terms_pages"];
+                                                        }
+                                                    ?> 
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -2446,49 +2494,127 @@ include('includes/admin_autoload/f_data.php');
                                     <span class="nav-link-icon">
                                         <i class="material-icons">warning</i>
                                     </span>
-                                    <span>Reports</span>
+                                    <span>
+                                        <?php
+                                            if (isset($wo['lang']['reports'])) {
+                                                echo $wo['lang']['reports'];
+                                            } else {
+                                                echo $admin_sidebar_default["reports"];
+                                            }
+                                        ?> 
+                                    </span>
                                 </a>
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-reports'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-reports') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-reports'); ?>" data-ajax="?path=manage-reports">Manage Reports</a>
+                                            <a <?php echo ($page == 'manage-reports') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-reports'); ?>" data-ajax="?path=manage-reports">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['manage_reports'])) {
+                                                            echo $wo['lang']['manage_reports'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["manage_reports"];
+                                                        }
+                                                    ?> 
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['user_reports'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'user_reports') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('user_reports'); ?>" data-ajax="?path=user_reports">Manage Users Reports</a>
+                                            <a <?php echo ($page == 'user_reports') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('user_reports'); ?>" data-ajax="?path=user_reports">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['manage_users_reports'])) {
+                                                            echo $wo['lang']['manage_users_reports'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["manage_users_reports"];
+                                                        }
+                                                    ?> 
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
                             </li>
                         <?php } ?>
+
+                        <!-- Cài đặt API -->
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['verfiy-applications'] == 1 || $wo['user']['permission']['push-notifications-system'] == 1 || $wo['user']['permission']['manage-api-access-keys'] == 1 || $wo['user']['permission']['manage-third-psites'] == 1))) { ?>
                             <li <?php echo ($page == 'verfiy-applications' || $page == 'push-notifications-system' || $page == 'manage-api-access-keys' || $page == 'manage-third-psites') ? 'class="open"' : ''; ?>>
                                 <a href="#">
                                     <span class="nav-link-icon">
                                         <i class="material-icons">compare_arrows</i>
                                     </span>
-                                    <span>API Settings</span>
+                                    <span>
+                                        <?php
+                                            if (isset($wo['lang']['api_settings'])) {
+                                                echo $wo['lang']['api_settings'];
+                                            } else {
+                                                echo $admin_sidebar_default["api_settings"];
+                                            }
+                                        ?>
+                                    </span>
                                 </a>
                                 <ul class="ml-menu">
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-api-access-keys'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-api-access-keys') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-api-access-keys'); ?>" data-ajax="?path=manage-api-access-keys">Manage API Server Key</a>
+                                            <a <?php echo ($page == 'manage-api-access-keys') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-api-access-keys'); ?>" data-ajax="?path=manage-api-access-keys">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['manage_api_server_key'])) {
+                                                            echo $wo['lang']['manage_api_server_key'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["manage_api_server_key"];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['push-notifications-system'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'push-notifications-system') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('push-notifications-system'); ?>" data-ajax="?path=push-notifications-system">Push Notifications Settings</a>
+                                            <a <?php echo ($page == 'push-notifications-system') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('push-notifications-system'); ?>" data-ajax="?path=push-notifications-system">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['push_notifications_settings'])) {
+                                                            echo $wo['lang']['push_notifications_settings'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["push_notifications_settings"];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['verfiy-applications'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'verfiy-applications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('verfiy-applications'); ?>" data-ajax="?path=verfiy-applications">Verify Applications</a>
+                                            <a <?php echo ($page == 'verfiy-applications') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('verfiy-applications'); ?>" data-ajax="?path=verfiy-applications">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['verify_applications'])) {
+                                                            echo $wo['lang']['verify_applications'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["verify_applications"];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                     <?php if ($is_admin || ($is_moderoter && $wo['user']['permission']['manage-third-psites'] == 1)) { ?>
                                         <li>
-                                            <a <?php echo ($page == 'manage-third-psites') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-third-psites'); ?>" data-ajax="?path=manage-third-psites">3rd Party Scripts</a>
+                                            <a <?php echo ($page == 'manage-third-psites') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('manage-third-psites'); ?>" data-ajax="?path=manage-third-psites">
+                                                <span>
+                                                    <?php
+                                                        if (isset($wo['lang']['3rd_party_scripts'])) {
+                                                            echo $wo['lang']['3rd_party_scripts'];
+                                                        } else {
+                                                            echo $admin_sidebar_default["3rd_party_scripts"];
+                                                        }
+                                                    ?>
+                                                </span>
+                                            </a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -2511,12 +2637,22 @@ include('includes/admin_autoload/f_data.php');
                         </ul>
                     </li> -->
                         <?php } ?>
+
+                        <!-- Trạng thái hệ thống -->
                         <li>
                             <a <?php echo ($page == 'system_status') ? 'class="active"' : ''; ?> href="<?php echo Wo_LoadAdminLinkSettings('system_status'); ?>" data-ajax="?path=system_status">
                                 <span class="nav-link-icon">
                                     <i class="material-icons">info</i>
                                 </span>
-                                <span>System Status</span>
+                                <span>
+                                    <?php
+                                        if (isset($wo['lang']['system_status'])) {
+                                            echo $wo['lang']['system_status'];
+                                        } else {
+                                            echo $admin_sidebar_default["system_status"];
+                                        }
+                                    ?>
+                                </span>
                             </a>
                         </li>
                         <?php if ($is_admin || ($is_moderoter && ($wo['user']['permission']['changelog'] == 1))) { ?>
@@ -2525,7 +2661,15 @@ include('includes/admin_autoload/f_data.php');
                                     <span class="nav-link-icon">
                                         <i class="material-icons">update</i>
                                     </span>
-                                    <span>Changelogs</span>
+                                    <span>
+                                        <?php
+                                            if (isset($wo['lang']['changelogs'])) {
+                                                echo $wo['lang']['changelogs'];
+                                            } else {
+                                                echo $admin_sidebar_default["changelogs"];
+                                            }
+                                        ?>
+                                    </span>
                                 </a>
                             </li>
                         <?php } ?>

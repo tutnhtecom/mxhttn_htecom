@@ -33,11 +33,11 @@
 				</a>
 			</li>
 		<?php } ?>
-		<li class="social <?php echo ($wo['setting_page'] == 'social-links') ? 'active': '';?>" dir="auto">
+		<!-- <li class="social <?php echo ($wo['setting_page'] == 'social-links') ? 'active': '';?>" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=social-links');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=social-links">
 				<span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 5.36364H13L7.99465 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 8.63636L1 8.63636L6.00535 13" class="icon_main" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <?php echo $wo['lang']['social_links'];?>
 			</a>
-		</li>
+		</li> -->
 		<?php if ($wo['config']['invite_links_system'] == 1) { ?>
 			<li class="invitation <?php echo ($wo['setting_page'] == 'invitation_links') ? 'active': '';?>" dir="auto">
 				<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=invitation_links');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=invitation_links">
@@ -90,13 +90,13 @@
 			</a>
 		</li>
 		<?php } ?>
-		<li class="blocked <?php echo ($wo['setting_page'] == 'blocked-users') ? 'active': '';?>" dir="auto">
+		<!-- <li class="blocked <?php echo ($wo['setting_page'] == 'blocked-users') ? 'active': '';?>" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=blocked-users');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=blocked-users">
 				<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5413 2.79406C14.8558 3.33698 16.663 5.14417 17.2059 7.45869C17.598 9.13021 17.598 10.8698 17.2059 12.5413C16.663 14.8558 14.8558 16.663 12.5413 17.2059C10.8698 17.598 9.13021 17.598 7.4587 17.2059C5.14417 16.663 3.33698 14.8558 2.79406 12.5413C2.40198 10.8698 2.40198 9.13022 2.79406 7.4587C3.33697 5.14418 5.14417 3.33698 7.45869 2.79407C9.13021 2.40198 10.8698 2.40198 12.5413 2.79406Z" class="icon_main" stroke-width="1.5"/><path d="M12.5413 2.79406C10.8698 2.40198 9.13021 2.40198 7.45869 2.79407C5.14417 3.33698 3.33697 5.14418 2.79406 7.4587C2.40198 9.13022 2.40198 10.8698 2.79406 12.5413C3.33698 14.8558 5.14417 16.663 7.4587 17.2059C9.13021 17.598 10.8698 17.598 12.5413 17.2059C14.8558 16.663 16.663 14.8558 17.2059 12.5413" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11.4736 8.52734L8.52734 11.4736M11.4736 11.4736L8.52734 8.52734" class="icon_main" stroke-width="1.5" stroke-linecap="round"/></svg></span> <?php echo $wo['lang']['blocked_users'];?>
 			</a>
-		</li>
+		</li> -->
 		
-		<li><hr></li>
+		<!-- <li><hr></li> -->
 		
 		<?php if ($wo['config']['website_mode'] == 'patreon') { ?>
 			<li class="<?php echo ($wo['setting_page'] == 'tiers') ? 'active': '';?>" dir="auto">
@@ -106,11 +106,11 @@
 			</li>
 		<?php } ?>
 
-		<li class="my_info <?php echo ($wo['setting_page'] == 'my_info') ? 'active': '';?>" dir="auto">
+		<!-- <li class="my_info <?php echo ($wo['setting_page'] == 'my_info') ? 'active': '';?>" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=my_info');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=my_info">
 				<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.19472 7.79391C3.70747 5.55676 5.41427 3.80997 7.6002 3.28521C9.17886 2.90623 10.8218 2.90623 12.4005 3.28521C14.5864 3.80997 16.2932 5.55676 16.8059 7.79391C17.1762 9.40955 17.1762 11.091 16.8059 12.7066C16.2932 14.9438 14.5864 16.6906 12.4004 17.2153C10.8218 17.5943 9.17886 17.5943 7.60021 17.2153C5.41427 16.6906 3.70747 14.9438 3.19472 12.7066C2.82442 11.091 2.82442 9.40955 3.19472 7.79391Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10.833H12.5M7.5 13.333H12.5" class="icon_main" stroke-width="1.5" stroke-linecap="round"/></svg></span> <?php echo $wo['lang']['my_info'];?>
 			</a>
-		</li>
+		</li> -->
         
 		<?php if ($wo['config']['store_system'] == 'on') { ?>
         <li class="my_info <?php echo ($wo['setting_page'] == 'addresses') ? 'active': '';?>" dir="auto">
@@ -121,38 +121,38 @@
 		<?php } ?>
 
 		<?php if (!Wo_IsAdmin() && $wo['user']['verified'] == 0): ?>
-		<li class="verification <?php echo ($wo['setting_page'] == 'verification') ? 'active': '';?>" dir="auto">
+		<!-- <li class="verification <?php echo ($wo['setting_page'] == 'verification') ? 'active': '';?>" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=verification');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=verification">
 				<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.51721 12.0498L5.56148 15.8055C5.27453 16.9332 6.48077 17.8703 7.55507 17.3543L9.16574 16.5808C9.69148 16.3283 10.3088 16.3283 10.8346 16.5808L12.4452 17.3543C13.5196 17.8703 14.7258 16.9332 14.4388 15.8055L13.4831 12.0498" class="icon_main" stroke-width="1.5"/><path d="M4.79539 5.96852C5.18749 4.34956 6.49269 3.08545 8.16429 2.70569C9.37149 2.43144 10.6279 2.43144 11.8351 2.70569C13.5067 3.08545 14.8119 4.34956 15.204 5.96853C15.4871 7.13773 15.4871 8.35453 15.204 9.52373C14.8119 11.1427 13.5067 12.4068 11.8351 12.7866C10.6279 13.0608 9.3715 13.0608 8.16429 12.7866C6.49269 12.4068 5.18749 11.1427 4.79539 9.52373C4.51221 8.35453 4.51221 7.13773 4.79539 5.96852Z" stroke="currentColor" stroke-width="1.5"/></svg></span> <?php echo $wo['lang']['verification'];?>
 			</a>
-		</li>
+		</li> -->
 		<?php endif; ?>
 		
 		<li><hr></li>
 		
 		<?php if ($wo['config']['monetization'] == 1) {?>
-            <li class="monetization <?php echo ($wo['setting_page'] == 'monetization') ? 'active': '';?>" dir="auto">
+            <!-- <li class="monetization <?php echo ($wo['setting_page'] == 'monetization') ? 'active': '';?>" dir="auto">
                 <a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=monetization');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=monetization">
                     <span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8H21.5M5.99988 12H9.99988" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="3" width="20" height="18" rx="4" class="icon_main" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <?php echo $wo['lang']['monetization'];?>
                 </a>
-            </li>
+            </li> -->
         <?php } ?>
 		
 		<?php if ($wo['config']['affiliate_system'] == 1 ||$wo['config']['point_level_system'] == 1 ) { ?>
 		<?php if ($wo['config']['affiliate_system'] == 1 || $wo['config']['point_allow_withdrawal'] == 1 || $wo['config']['funding_system'] == 1 || $wo['config']['store_system'] == 'on') { ?>
-			<li class="earnings <?php echo ($wo['setting_page'] == 'payments') ? 'active': '';?>" dir="auto">
+			<!-- <li class="earnings <?php echo ($wo['setting_page'] == 'payments') ? 'active': '';?>" dir="auto">
 				<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=payments');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=payments">
 					<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.40417 7.37396C2.96471 5.11653 4.75469 3.37111 7.02514 2.86802L7.40337 2.78421C9.11351 2.40526 10.8858 2.40526 12.596 2.78421L12.9742 2.86802C15.2447 3.37111 17.0346 5.11653 17.5952 7.37396C18.0234 9.09846 18.0234 10.9015 17.5952 12.626C17.0346 14.8835 15.2447 16.6289 12.9742 17.132L12.596 17.2158C10.8858 17.5947 9.11351 17.5947 7.40337 17.2158L7.02514 17.132C4.75469 16.6289 2.96471 14.8835 2.40417 12.626C1.97595 10.9015 1.97595 9.09846 2.40417 7.37396Z" class="icon_main" stroke-width="1.5"/><path d="M7.40337 2.78421C9.11351 2.40526 10.8858 2.40526 12.596 2.78421L12.9742 2.86802C15.2447 3.37111 17.0346 5.11653 17.5952 7.37396C18.0234 9.09846 18.0234 10.9015 17.5952 12.626C17.0346 14.8835 15.2447 16.6289 12.9742 17.132L12.596 17.2158C10.8858 17.5947 9.11351 17.5947 7.40337 17.2158L7.02514 17.132C4.75469 16.6289 2.96471 14.8835 2.40417 12.626C2.19006 11.7638 2.08301 10.8819 2.08301 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.0002 5.83301C10.3188 5.83301 10.5771 6.07633 10.5771 6.37649V6.82112H10.641C11.7139 6.82112 12.5 7.6998 12.5 8.68212C12.5 8.98228 12.2417 9.2256 11.9231 9.2256C11.6045 9.2256 11.3462 8.98228 11.3462 8.68212C11.3462 8.20915 10.9842 7.90808 10.641 7.90808H10.5771V9.61905L11.3561 9.88588C12.0639 10.1284 12.5 10.7878 12.5 11.4862C12.5 12.3752 11.7876 13.1782 10.8055 13.1782H10.5771V13.6229C10.5771 13.923 10.3188 14.1663 10.0002 14.1663C9.68158 14.1663 9.42328 13.923 9.42328 13.6229V13.1782H9.35897C8.28606 13.1782 7.5 12.2995 7.5 11.3172C7.5 11.017 7.7583 10.7737 8.07692 10.7737C8.39555 10.7737 8.65385 11.017 8.65385 11.3172C8.65385 11.7901 9.01577 12.0912 9.35897 12.0912H9.42328V10.3804L8.64393 10.1134C7.93608 9.87093 7.5 9.21149 7.5 8.51309C7.5 7.62412 8.21243 6.82112 9.1945 6.82112H9.42328V6.37649C9.42328 6.07633 9.68158 5.83301 10.0002 5.83301ZM9.42328 7.90808H9.1945C8.94213 7.90808 8.65385 8.13347 8.65385 8.51309C8.65385 8.80339 8.83339 9.02172 9.03825 9.09189L9.42328 9.22379V7.90808ZM10.5771 10.7756V12.0912H10.8055C11.0579 12.0912 11.3462 11.8658 11.3462 11.4862C11.3462 11.1959 11.1666 10.9776 10.9618 10.9074L10.5771 10.7756Z" class="icon_main_fill"/></svg></span> <?php echo $wo['lang']['my_earnings'];?>
 				</a>
-			</li>
+			</li> -->
 		<?php } ?>
 
 		<?php if ($wo['config']['affiliate_system'] == 1) {?>
-		<li class="affiliates <?php echo ($wo['setting_page'] == 'affiliates') ? 'active': '';?>" dir="auto">
+		<!-- <li class="affiliates <?php echo ($wo['setting_page'] == 'affiliates') ? 'active': '';?>" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=setting&' . $wo['user_setting'] . 'page=affiliates');?>" data-ajax="?link1=setting&<?php echo $wo['user_setting'];?>page=affiliates">
 				<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 14.7724C4 13.4167 4.96316 12.262 6.27213 12.0483L6.39004 12.0291C7.4382 11.858 8.50625 11.858 9.5544 12.0291L9.67231 12.0483C10.9813 12.262 11.9444 13.4167 11.9444 14.7724C11.9444 15.3583 11.48 15.8333 10.9071 15.8333H5.03739C4.46446 15.8333 4 15.3583 4 14.7724Z" stroke="currentColor"/><path d="M10.2894 7.36979C10.2894 8.67859 9.25194 9.73958 7.97222 9.73958C6.69251 9.73958 5.65509 8.67859 5.65509 7.36979C5.65509 6.06099 6.69251 5 7.97222 5C9.25194 5 10.2894 6.06099 10.2894 7.36979Z" stroke="currentColor"/><path d="M11.9443 9.73958C13.5731 9.73958 14.8934 8.67859 14.8934 7.36979C14.8934 6.06099 13.5731 5 11.9443 5M13.958 15.8333H15.6796C16.4088 15.8333 16.9999 15.3583 16.9999 14.7724C16.9999 13.4167 15.774 12.262 14.1081 12.0483L13.958 12.0291C13.5538 12.0291 13.5296 12.0291 12.9901 12.0291" class="icon_main" stroke-linecap="round"/></svg></span> <?php echo $wo['lang']['my_affiliates'];?>
 			</a>
-		</li>
+		</li> -->
 		
 		<?php } ?>
 		<?php if ($wo['config']['point_level_system'] == 1) {?>
@@ -162,14 +162,14 @@
 			</a>
 		</li>
 		<?php } ?>
-		<li class="" dir="auto">
+		<!-- <li class="" dir="auto">
 			<a href="<?php echo Wo_SeoLink('index.php?link1=wallet'); ?>" data-ajax="?link1=wallet">
 				<span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66699 7.5L10.0003 7.5" class="icon_main" stroke-width="1.5" stroke-linecap="round"/><path d="M2.40417 12.626L3.13206 12.4453L2.40417 12.626ZM2.40417 7.37396L3.13206 7.5547L2.40417 7.37396ZM17.5952 7.37396L18.3231 7.19322L17.5952 7.37396ZM17.5952 12.626L16.8673 12.4453L17.5952 12.626ZM12.596 17.2158L12.4337 16.4836H12.4337L12.596 17.2158ZM7.40337 17.2158L7.56562 16.4836L7.40337 17.2158ZM7.40337 2.78421L7.56562 3.51645H7.56562L7.40337 2.78421ZM12.596 2.78421L12.7582 2.05197V2.05197L12.596 2.78421ZM7.02514 17.132L6.86288 17.8642L7.02514 17.132ZM12.9742 17.132L13.1365 17.8642H13.1365L12.9742 17.132ZM12.9742 2.86802L12.812 3.60025L12.9742 2.86802ZM7.02514 2.86802L6.86289 2.13578V2.13578L7.02514 2.86802ZM15.5775 12.0864L15.4429 12.8242H15.4429L15.5775 12.0864ZM15.5286 12.0775L15.6632 11.3396L15.6632 11.3396L15.5286 12.0775ZM15.5286 7.92253L15.6632 8.66036L15.6632 8.66036L15.5286 7.92253ZM15.5775 7.91362L15.4429 7.17579L15.4429 7.17579L15.5775 7.91362ZM17.4496 8.85394C17.8291 9.01994 18.2713 8.84687 18.4373 8.46737C18.6033 8.08788 18.4302 7.64566 18.0508 7.47966L17.4496 8.85394ZM18.0508 12.5203C18.4302 12.3543 18.6033 11.9121 18.4373 11.5326C18.2713 11.1531 17.8291 10.9801 17.4496 11.1461L18.0508 12.5203ZM13.8148 10.5235L13.0937 10.7295L13.8148 10.5235ZM13.8148 9.47649L14.536 9.68248V9.68248L13.8148 9.47649ZM7.18739 3.60026L7.56562 3.51645L7.24111 2.05197L6.86289 2.13578L7.18739 3.60026ZM12.4337 3.51645L12.812 3.60025L13.1365 2.13578L12.7582 2.05197L12.4337 3.51645ZM12.812 16.3997L12.4337 16.4836L12.7582 17.948L13.1365 17.8642L12.812 16.3997ZM7.56562 16.4836L7.18739 16.3997L6.86288 17.8642L7.24111 17.948L7.56562 16.4836ZM3.13206 12.4453C2.73332 10.8395 2.73332 9.16051 3.13206 7.5547L1.67627 7.19321C1.21859 9.03641 1.21859 10.9636 1.67627 12.8068L3.13206 12.4453ZM16.8673 7.55471C17.266 9.16051 17.266 10.8395 16.8673 12.4453L18.3231 12.8068C18.7808 10.9636 18.7808 9.03641 18.3231 7.19322L16.8673 7.55471ZM12.4337 16.4836C10.8305 16.8388 9.16889 16.8388 7.56562 16.4836L7.24111 17.948C9.05813 18.3507 10.9412 18.3507 12.7582 17.948L12.4337 16.4836ZM7.56562 3.51645C9.16889 3.16118 10.8305 3.16118 12.4337 3.51645L12.7582 2.05197C10.9412 1.64934 9.05813 1.64934 7.24111 2.05197L7.56562 3.51645ZM7.18739 16.3997C5.19494 15.9582 3.62402 14.4265 3.13206 12.4453L1.67627 12.8068C2.30541 15.3404 4.31443 17.2995 6.86288 17.8642L7.18739 16.3997ZM13.1365 17.8642C15.6849 17.2995 17.6939 15.3404 18.3231 12.8068L16.8673 12.4453C16.3753 14.4265 14.8044 15.9582 12.812 16.3997L13.1365 17.8642ZM12.812 3.60025C14.8044 4.04175 16.3753 5.57349 16.8673 7.55471L18.3231 7.19322C17.6939 4.65957 15.6849 2.70048 13.1365 2.13578L12.812 3.60025ZM6.86289 2.13578C4.31443 2.70048 2.30541 4.65957 1.67627 7.19321L3.13206 7.5547C3.62402 5.57349 5.19494 4.04175 7.18739 3.60026L6.86289 2.13578ZM15.712 11.3485L15.6632 11.3396L15.3941 12.8153L15.4429 12.8242L15.712 11.3485ZM15.6632 8.66036L15.712 8.65146L15.4429 7.17579L15.3941 7.18469L15.6632 8.66036ZM15.712 8.65146C16.2984 8.54453 16.9034 8.61503 17.4496 8.85394L18.0508 7.47966C17.2311 7.12112 16.3231 7.01531 15.4429 7.17579L15.712 8.65146ZM15.4429 12.8242C16.3231 12.9847 17.2311 12.8789 18.0508 12.5203L17.4496 11.1461C16.9034 11.385 16.2984 11.4555 15.712 11.3485L15.4429 12.8242ZM14.536 10.3175C14.4767 10.11 14.4767 9.89001 14.536 9.68248L13.0937 9.27049C12.9575 9.74729 12.9575 10.2527 13.0937 10.7295L14.536 10.3175ZM15.3941 7.18469C14.2928 7.38549 13.4011 8.19411 13.0937 9.27049L14.536 9.68248C14.6867 9.1549 15.1237 8.75873 15.6632 8.66036L15.3941 7.18469ZM15.6632 11.3396C15.1237 11.2413 14.6867 10.8451 14.536 10.3175L13.0937 10.7295C13.4011 11.8059 14.2928 12.6145 15.3941 12.8153L15.6632 11.3396Z" fill="currentColor"/></svg></span> <?php echo $wo['lang']['my_wallet'];?>
 			</a>
-		</li>
+		</li> -->
 		<?php } ?>
 		
-		<li><hr></li>
+		<!-- <li><hr></li> -->
 
 		<?php if ($wo['config']['deleteAccount'] == 1) {?>
 		<li class="delete <?php echo ($wo['setting_page'] == 'delete-account') ? 'active': '';?>" dir="auto">

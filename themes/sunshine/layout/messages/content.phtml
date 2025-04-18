@@ -20,11 +20,14 @@ if (!empty($_GET['user']) && empty($_GET['page'])) {
 <path d="M1.5 17.1115C1.5 14.6984 3.19732 12.643 5.50404 12.2627L5.71182 12.2284C7.55892 11.9239 9.44108 11.9239 11.2882 12.2284L11.496 12.2627C13.8027 12.643 15.5 14.6984 15.5 17.1115C15.5 18.1545 14.6815 19 13.6719 19H3.32813C2.31848 19 1.5 18.1545 1.5 17.1115Z" stroke="currentColor" stroke-width="1.5"></path>
 <path d="M12.5834 4.9375C12.5834 7.11212 10.7552 8.875 8.50002 8.875C6.24486 8.875 4.41669 7.11212 4.41669 4.9375C4.41669 2.76288 6.24486 1 8.50002 1C10.7552 1 12.5834 2.76288 12.5834 4.9375Z" stroke="currentColor" stroke-width="1.5"></path>
 </svg> <?php echo $wo['lang']['users'];?></a></li>
-					<li class="pointer"><a data-toggle="tab" data-target="#groups-message" href="#"><svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1 15.433C1 13.4308 2.45485 11.7254 4.43204 11.4098L4.61013 11.3814C6.19336 11.1287 7.80664 11.1287 9.38987 11.3814L9.56796 11.4098C11.5451 11.7254 13 13.4308 13 15.433C13 16.2984 12.2984 17 11.433 17H2.56697C1.70156 17 1 16.2984 1 15.433Z" stroke="currentColor" stroke-width="1.5"></path>
-<path d="M10.5 4.5C10.5 6.433 8.933 8 7 8C5.067 8 3.5 6.433 3.5 4.5C3.5 2.567 5.067 1 7 1C8.933 1 10.5 2.567 10.5 4.5Z" stroke="currentColor" stroke-width="1.5"></path>
-<path d="M13 8C14.933 8 16.5 6.433 16.5 4.5C16.5 2.567 14.933 1 13 1M15.3899 17H17.433C18.2984 17 19 16.2984 19 15.433C19 13.4308 17.5451 11.7254 15.568 11.4098V11.4098C15.4494 11.3909 15.3293 11.3814 15.2093 11.3814C14.8895 11.3814 14.7902 11.3814 14.2412 11.3814" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
-</svg> <?php echo $wo['lang']['groups'];?></a></li>				
+					<!-- <li class="pointer">
+            <a data-toggle="tab" data-target="#groups-message" href="#"><svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 15.433C1 13.4308 2.45485 11.7254 4.43204 11.4098L4.61013 11.3814C6.19336 11.1287 7.80664 11.1287 9.38987 11.3814L9.56796 11.4098C11.5451 11.7254 13 13.4308 13 15.433C13 16.2984 12.2984 17 11.433 17H2.56697C1.70156 17 1 16.2984 1 15.433Z" stroke="currentColor" stroke-width="1.5"></path>
+              <path d="M10.5 4.5C10.5 6.433 8.933 8 7 8C5.067 8 3.5 6.433 3.5 4.5C3.5 2.567 5.067 1 7 1C8.933 1 10.5 2.567 10.5 4.5Z" stroke="currentColor" stroke-width="1.5"></path>
+              <path d="M13 8C14.933 8 16.5 6.433 16.5 4.5C16.5 2.567 14.933 1 13 1M15.3899 17H17.433C18.2984 17 19 16.2984 19 15.433C19 13.4308 17.5451 11.7254 15.568 11.4098V11.4098C15.4494 11.3909 15.3293 11.3814 15.2093 11.3814C14.8895 11.3814 14.7902 11.3814 14.2412 11.3814" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+              </svg> <?php echo $wo['lang']['groups'];?>
+            </a>
+          </li>				 -->
 				</ul>
 				
 				<div class="form-group inner-addon <?php echo Wo_RightToLeft('left-addon');?> messages-search-icon">
@@ -36,11 +39,11 @@ if (!empty($_GET['user']) && empty($_GET['page'])) {
 					<button type="button" class="btn btn-main" title="<?php echo $wo['lang']['mark_all_as_read'] ?>" onclick="MarkAsReadAll(this);">
 						<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path fill="currentColor" d="M14,10H2V12H14V10M14,6H2V8H14V6M2,16H10V14H2V16M21.5,11.5L23,13L16,20L11.5,15.5L13,14L16,17L21.5,11.5Z"></path></svg>
 					</button>
-					<button type="button" class="btn btn-main" onclick="Wo_CreateGChat(event)">
+					<!-- <button type="button" class="btn btn-main" onclick="Wo_CreateGChat(event)">
 						<span class="pointer" style="margin-right: 5px;">
 							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M13,13C11,13 7,14 7,16V18H19V16C19,14 15,13 13,13M19.62,13.16C20.45,13.88 21,14.82 21,16V18H24V16C24,14.46 21.63,13.5 19.62,13.16M13,11A3,3 0 0,0 16,8A3,3 0 0,0 13,5A3,3 0 0,0 10,8A3,3 0 0,0 13,11M18,11A3,3 0 0,0 21,8A3,3 0 0,0 18,5C17.68,5 17.37,5.05 17.08,5.14C17.65,5.95 18,6.94 18,8C18,9.06 17.65,10.04 17.08,10.85C17.37,10.95 17.68,11 18,11M8,10H5V7H3V10H0V12H3V15H5V12H8V10Z" /></svg>
 						</span>
-					</button>
+					</button> -->
 					</div>
                 </div>
 				
